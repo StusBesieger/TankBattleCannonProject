@@ -1,0 +1,48 @@
+<Block>
+
+	<Debug>false</Debug>
+	
+	<ID>22</ID>
+	
+	<Name>AmmoStrage</Name>
+	
+	<Mass>2</Mass>
+	<ModuleMapperTypes>
+	</ModuleMapperTypes>
+	<Script>TBCStusSpace.AdAmmunitionStorage</Script>
+	<Health>1</Health>
+	<Modules>
+	</Modules>
+
+	<Mesh name="AmmoStrageM">
+		<Position x="0.0" y="0.0" z="0.0" />
+		<Rotation x="90.0" y="0.0" z="0.0" />
+		<Scale x="1.0" y="1.0" z="1.0" />
+	</Mesh>
+
+	<Texture name="StrageT" />
+
+	<Icon>
+		<Position x="0.0" y="0.0" z="0.0" />
+		<Rotation x="-10.0" y="30.0"  z="0.0" />
+		<Scale x="0.3" y="0.3" z="0.3" />
+	</Icon>
+
+
+
+	<Colliders>
+		<BoxCollider>
+			<Position x="0.0" y="0.0" z="0.355" />
+			<Rotation x="0.0" y="0.0" z="0.0" />
+			<Scale x="0.5" y="0.5" z="0.7" />
+		</BoxCollider>
+	</Colliders>
+
+	<BasePoint hasAddingPoint="false" breakForce="560000">
+		<Stickiness enabled="true" radius="0.35" />
+		<Motion x="false" y="false" z="false" />
+	</BasePoint>
+
+	<AddingPoints>
+	</AddingPoints>
+</Block>

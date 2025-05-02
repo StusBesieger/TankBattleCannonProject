@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+CRC: 2097599926
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 98c287b2a3f0e80ac3bbe8240efd08f5
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 83568dcf19eff87793c2767ef4e8a4af
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+Assets:
+- Assets/effect/TBCannon/HEexplosion.prefab
+- Assets/effect/TBCannon/shellTrail.prefab
+- Assets/effect/TBCannon/explosion.prefab
+- Assets/effect/TBCannon/Cannon.prefab
+- Assets/effect/TBCannon/Orbitron Medium.ttf
+- Assets/effect/TBCannon/SpotEffect.prefab
+Dependencies: []

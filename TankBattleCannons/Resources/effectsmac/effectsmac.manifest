@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 2671881772
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: tankbattlemac
+      Dependencies: {}

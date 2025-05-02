@@ -1,0 +1,97 @@
+<Block>
+
+	<Debug>false</Debug>
+	
+	<ID>25</ID>
+	
+	<Name>EnhancedAmmunitionDepot</Name>
+	
+	<Mass>5</Mass>
+	<Script>TBCStusSpace.AdEnhancedAmmunitionDepot</Script>
+
+	<ModuleMapperTypes>
+	</ModuleMapperTypes>
+	<Health>1</Health>
+	<Modules>
+		<AdBlockProp modid="a4577151-2173-4084-a456-4b29e8d3e01f">
+			<BlockState>
+				<JointStr>300000</JointStr>
+
+				<FrictionStr>0.6</FrictionStr>
+
+				<BounceStr>0</BounceStr>
+
+				<CollisionType>Discrete</CollisionType>
+
+				<FrictionCombineType>Average</FrictionCombineType>
+
+				<BounceCombineType>Multiply</BounceCombineType>
+
+			</BlockState>
+			<SpringState>
+
+				<MotionX>Locked</MotionX>
+				<MotionY>Locked</MotionY>
+				<MotionZ>Locked</MotionZ>
+
+				<SpringStr>0</SpringStr>
+
+				<DamperStr>0</DamperStr>
+
+				<LimitDistance>0</LimitDistance>
+
+			</SpringState>
+			<RotateState>
+
+				<AngularMotionX>Locked</AngularMotionX>
+				<AngularMotionY>Locked</AngularMotionY>
+				<AngularMotionZ>Locked</AngularMotionZ>
+
+				<SpringStr>0</SpringStr>
+
+				<DamperStr>0</DamperStr>
+
+				<LimitAngular>0</LimitAngular>
+			</RotateState>
+		</AdBlockProp>
+
+	</Modules>
+	<FireInteraction burnDuration="20">
+        <SphereTrigger>
+            <Position x="0" y="0" z="0.5" />
+            <Radius>1.5</Radius>
+        </SphereTrigger>
+    </FireInteraction>
+
+	<Mesh name="EnhancedAmmunitionDepotM">
+		<Position x="0.0" y="0.0" z="0.0" />
+		<Rotation x="90" y="0.0" z="0" />
+		<Scale x="1.0" y="1.0" z="1.0" />
+	</Mesh>
+
+	<Texture name="EnhancedAmmunitionDepotT" />
+
+	<Icon>
+		<Position x="0.0" y="0.0" z="0.0" />
+		<Rotation x="-10.0" y="30.0"  z="0.0" />
+		<Scale x="0.3" y="0.3" z="0.3" />
+	</Icon>
+
+
+
+	<Colliders>
+		<BoxCollider>
+			<Position x="0.0" y="0.0" z="0.55" />
+			<Rotation x="0.0" y="0.0" z="0.0" />
+			<Scale x="0.7" y="0.7" z="1.0" />
+		</BoxCollider>
+	</Colliders>
+
+	<BasePoint hasAddingPoint="false" breakForce="560000">
+		<Stickiness enabled="true" radius="0.35" />
+		<Motion x="false" y="false" z="false" />
+	</BasePoint>
+
+	<AddingPoints>
+	</AddingPoints>
+</Block>

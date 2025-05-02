@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{fc7e1410-2314-4efd-a42a-26b57138a070}") = "TBCStusAseem", "TBCStusAseem\TBCStusAseem.csproj", "{b5308143-b808-4472-9974-8f2a51373a50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{b5308143-b808-4472-9974-8f2a51373a50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{b5308143-b808-4472-9974-8f2a51373a50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{b5308143-b808-4472-9974-8f2a51373a50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{b5308143-b808-4472-9974-8f2a51373a50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {664b29f8-33cb-413e-936c-29fa2064042e}
+	EndGlobalSection
+EndGlobal
