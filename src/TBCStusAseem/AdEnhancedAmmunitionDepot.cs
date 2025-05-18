@@ -47,6 +47,11 @@ namespace TBCStusSpace
             {
                 GOparent = GOparent.transform.parent;
             }
+            ChildObjects = GOparent.GetComponentsInChildren<AdShootingBehavour>();
+            if(ChildObjects != null)
+            {
+                StartCoroutine(PowerChange());
+            }
         }
         public override void SimulateFixedUpdateAlways()
         {
@@ -67,12 +72,16 @@ namespace TBCStusSpace
             }
             if(powerchange)
             {
-                ChildObjects = GOparent.GetComponentsInChildren<AdShootingBehavour>();
-                foreach (AdShootingBehavour childobject in ChildObjects)
-                {
-                    childobject.PowerSlider.Value += 25;
-                }
+                
                 powerchange = false;
+            }
+        }
+        IEnumerator PowerChange()
+        {
+            yield return new WaitForFixedUpdate();
+            foreach (AdShootingBehavour childobject in ChildObjects)
+            {
+                childobject.PowerSlider.Value += 25;
             }
         }
     }

@@ -29,7 +29,7 @@ namespace TBCStusSpace
         [Reloadable]
         public int ExtinguishingNum;
 
-        [XmlArray("Sound")]
+        [XmlArray("Sounds")]
         [RequireToValidate]
         [CanBeEmpty]
         [XmlArrayItem("AudioClip", typeof(ResourceReference))]
@@ -37,130 +37,77 @@ namespace TBCStusSpace
     }
     public class TBCAddFireExtinguisherBehaviour : BlockModuleBehaviour<TBCAddFireExtinguisherModule>
     {
-        public int blockID;
-        private int Spotnum = 0;
-        public string SpotEffectName;
-        public MKey ExtinguishingKey;
-        public int ExtinguishingNum;
-        public BlockBehaviour bb;
-        public LayerMask Blocklayermask = (1 << 0) | (1 << 12) | (1 << 14) | (1 << 25) | (1 << 26);
-        private bool isOwnerSame;
-        private Transform SParentObject;
-        private FireTag[] firetags;
-        private int windowId;
-        private Rect windowRect = new Rect(375, 725, 175, 50);
-        private string limitnum;
-        private string reloadtime;
-        public AudioSource audiosource;
-        public AudioClip sound;
+        public int Enum = 2;
+        public bool firefightngOK = false;
+        public MKey extinguishingkey;
+        public AudioClip AudioClip;
+        public AudioSource audioSource;
+        public GameObject BlockObject;
+        public GameObject SimulatingObject;
+        public FireTag[] FireTags;
 
+        public override void OnBlockPlaced()
+        {
+            base.OnBlockPlaced();
+
+        }
         public override void OnSimulateStart()
         {
             base.OnSimulateStart();
-            ExtinguishingNum = Module.ExtinguishingNum;
-            UpdateOwnerFlag();
-            limitnum = ExtinguishingNum.ToString();
-            SParentObject = this.transform;
-            //リスポ時に呼び起されている可能性あるためnullかどうか確認
-            if(SParentObject.gameObject.name != "Simulation Machine")
-            {
-                while (SParentObject.gameObject.name != "Simulation Machine")
-                {
-                    SParentObject = SParentObject.transform.parent;
-                }
-            }
-            firetags = SParentObject.gameObject.GetComponentsInChildren<FireTag>();
+            extinguishingkey = GetKey(Module.ExtinguishingKey);
+
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.spatialBlend = 1.0f;
+            AudioClip = ModResource.GetAudioClip("FireEx");
+            SimulatingObject = this.transform.parent.gameObject;
+            StartCoroutine(GetParentObject());
         }
-        private void UpdateOwnerFlag()  //プレイヤーとブロックの親が一緒か確認する関数
+        IEnumerator GetParentObject()
         {
-            if (StatMaster.isMP)
+            yield return new WaitForFixedUpdate();
+            while (SimulatingObject.name != "Simulation Machine")
             {
-                ushort BlockPlayerID = BlockBehaviour.ParentMachine.PlayerID;
-                ushort LocalPlayerID = PlayerMachine.GetLocal().Player.NetworkId;
-                isOwnerSame = BlockPlayerID == LocalPlayerID;
+                SimulatingObject = SimulatingObject.transform.parent.gameObject;
             }
-            else
-            {
-                isOwnerSame = true;
-            }
+
+            FireTags = SimulatingObject.GetComponentsInChildren<FireTag>();
         }
-        public override void SafeAwake()
+        public override void SimulateFixedUpdateHost()
         {
-            base.SafeAwake();
-            windowId = ModUtility.GetWindowId();
-            blockID = BlockId;
-            try
-            {
-                ExtinguishingKey = GetKey(Module.ExtinguishingKey);
-            }
-            catch
-            {
-                Mod.Error("BlockID" + blockID + "error");
-            }
-            audiosource = gameObject.AddComponent<AudioSource>();
-            audiosource.spatialBlend = 1.0f;
-            sound = ModResource.GetAudioClip("FireEx");
+            base.SimulateFixedUpdateHost();
 
         }
-        public void Awake()
-        {
-        }
-        public override void SimulateFixedUpdateAlways()
-        {
-            base.SimulateFixedUpdateAlways();
-            if (ExtinguishingKey.IsPressed || ExtinguishingKey.EmulationPressed())
-            {
-                if (ExtinguishingNum > 0)
-                {
-                    if (Spotnum == 0)
-                    {
-                        Spotnum = 1;
-                        Extinguishing();
-
-                    }
-                }
-            }
-            if (Spotnum != 0)
-            {
-                Spotnum++;
-                reloadtime = (Spotnum / 5).ToString() + " %";
-            }
-            if (Spotnum == 500)
-            {
-                Spotnum = 0;
-
-            }
-            if (Spotnum == 0)
-            {
-                reloadtime = "Use OK";
-            }
-        }
-        //キーを押された時の処理
         public override void SimulateUpdateAlways()
         {
             base.SimulateUpdateAlways();
-            
-        }
-        public void Extinguishing()
-        {
-            ExtinguishingNum--;
-            limitnum = ExtinguishingNum.ToString();
-            foreach (FireTag fireTag in firetags)
+            if (extinguishingkey.IsPressed || extinguishingkey.EmulationPressed())
             {
-                fireTag.WaterHit();
-                audiosource.PlayOneShot(sound);
+                firefightngOK = true;
+                if(Enum > 0)
+                {
+                    audioSource.PlayOneShot(AudioClip);
+                }
             }
         }
-        public void OnGUI()
+        public override void SimulateUpdateClient()
         {
-            if (isOwnerSame)
+            base.SimulateUpdateClient();
+        }
+        public override void SimulateUpdateHost()
+        {
+            base.SimulateUpdateHost();
+            if (firefightngOK)
             {
-                windowRect = GUILayout.Window(windowId, windowRect, delegate (int windowId)
+                if (Enum > 0)
                 {
-                    GUILayout.Label(reloadtime);
-                    GUILayout.Label("Can use " + limitnum);
+                    foreach (FireTag fireTag in FireTags)
+                    {
+                        fireTag.WaterHit();
+                    }
+                    Enum--;
+                    
                 }
-                , "Fire Extinguisher");
+                firefightngOK = false;
             }
         }
     }

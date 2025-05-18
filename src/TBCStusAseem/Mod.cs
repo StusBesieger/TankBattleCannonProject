@@ -15,6 +15,14 @@ namespace TBCStusSpace
 
 		public static ModAssetBundle modAssetBundle;
 
+		public static Dictionary<int, bool> RangeboolDict;
+		public static Dictionary<int, string> RangeDistanceDict;
+
+		public static Message RangeBmessage;
+		public static Message RangeDmessage;
+		public static MessageType RangeBmessageType;
+		public static MessageType RangeDmessageType;
+
 		public static void Log(string msg)
 		{
 			Debug.Log("TBC Log: " + msg);
@@ -72,7 +80,23 @@ namespace TBCStusSpace
 					modAssetBundle = ModResource.GetAssetBundle("myasset");
 					break;
 			}
-		}
+			RangeboolDict = new Dictionary<int, bool>();
+			RangeDistanceDict = new Dictionary<int, string>();
 
+			RangeBmessageType = ModNetworking.CreateMessageType(DataType.Integer, DataType.Boolean);
+			ModNetworking.Callbacks[RangeBmessageType] += new Action<Message>(ApplyRangeB);
+			RangeDmessageType = ModNetworking.CreateMessageType(DataType.Integer, DataType.String);
+			ModNetworking.Callbacks[RangeDmessageType] += new Action<Message>(ApplyRangeD);
+		}
+		public static void ApplyRangeB(Message message)
+        {
+			RangeboolDict[(int)message.GetData(0)] = (bool)message.GetData(1);
+
+		}
+		public static void ApplyRangeD(Message message)
+        {
+			RangeDistanceDict[(int)message.GetData(0)] = (string)message.GetData(1);
+
+		}
 	}
 }

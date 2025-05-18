@@ -16,6 +16,11 @@ namespace TBCStusSpace
     [Reloadable]
     public class TBCAddAPModule : BlockModule
 	{
+        [XmlElement("APSpeed")]
+        [DefaultValue(0f)]
+        [Reloadable]
+        public float APSpeed;
+
         [XmlElement("APtime")]
         [DefaultValue(0f)]
         [Reloadable]
@@ -41,9 +46,11 @@ namespace TBCStusSpace
         public float aptime;
         public float standardpenetration;
         public int apcoefficient;
+        public float APspeed;
         public override void OnSimulateStart()
         {
             base.OnSimulateStart();
+            APspeed = Module.APSpeed;
             aptime = Module.APtime;
             apcoefficient = Module.APcoefficient;
             standardpenetration = Module.StandardPenetration;
@@ -76,6 +83,7 @@ namespace TBCStusSpace
                                 tbcapcontroller = child.gameObject.AddComponent<TBCAPController>();
 
                             }
+                            tbcapcontroller.APSpeed = APspeed;
                             tbcapcontroller.APtime = aptime;
                             tbcapcontroller.APcoefficient = apcoefficient;
                             tbcapcontroller.StandardPenetration = standardpenetration;
@@ -105,6 +113,7 @@ namespace TBCStusSpace
 
                                 tbcapcontroller = child.gameObject.AddComponent<TBCAPController>();
                             }
+                            tbcapcontroller.APSpeed = APspeed;
                             tbcapcontroller.APtime = aptime;
                             tbcapcontroller.APcoefficient = apcoefficient;
                             tbcapcontroller.StandardPenetration = standardpenetration;
@@ -116,7 +125,7 @@ namespace TBCStusSpace
         }
 
     }
-    public class TBCAPController : ProjectileScript
+    public class TBCAPController : MonoBehaviour
     {
         private Rigidbody rigidbody;
         private Rigidbody hitrigidbody;
@@ -154,13 +163,13 @@ namespace TBCStusSpace
         private int rnd;
         
 
-        public new void Awake()
+        public void Awake()
         {
-            base.Awake();
 
             mCollider = this.transform.Find("Gyro").transform.Find("Colliders").GetChild(0).GetComponent<Collider>();
             adProjectileScript = this.gameObject.GetComponent<AdProjectileScript>();
-            init = false;
+            init = true;
+            StartCoroutine(InitStart());
             rigidbody = GetComponent<Rigidbody>();
             AudioSource = gameObject.GetComponent<AudioSource>();
             AudioSource.spatialBlend = 1.0f;
@@ -168,58 +177,62 @@ namespace TBCStusSpace
             AudioClip2 = ModResource.GetAudioClip("Ricochet_2");
             AudioClip3 = ModResource.GetAudioClip("Ricochet_3");
         }
-        public override void FixedUpdate()
+        IEnumerator InitStart()
         {
-            if (!init)
-            {
-                if (APSpeed < this.rigidbody.velocity.magnitude)
+            yield return new WaitForFixedUpdate();
+            init = false;
+        }
+        public void FixedUpdate()
+        {
+                if (!init)
                 {
-                    APSpeed = this.rigidbody.velocity.magnitude;
-                }
-
-                APDirection = this.rigidbody.velocity.normalized;
-                APFixedSp = this.rigidbody.velocity.magnitude * Time.deltaTime;
-                if (Physics.SphereCast(mCollider.transform.position + APDirection * 2.0f, 0.25f, APDirection, out hit, 1.5f * APFixedSp, layermask))
-                {
-                    hitangle = Vector3.Angle(-1*APDirection, hit.normal);
-                    hitrigidbody = hit.collider.gameObject.GetComponent<Rigidbody>();
-                    componentfind = hit.collider.gameObject;
-                    while (hitrigidbody == null)
+                    APDirection = this.rigidbody.velocity.normalized;
+                    APFixedSp = this.rigidbody.velocity.magnitude * Time.deltaTime;
+                    if (Physics.SphereCast(mCollider.transform.position + APDirection * 0.5f, 0.25f, APDirection, out hit, 2.0f * APFixedSp, layermask))
                     {
-                        componentfind = componentfind.transform.parent.gameObject;
-                        hitrigidbody = componentfind.gameObject.GetComponent<Rigidbody>();
-                    }
-                    componentparent = hit.collider.gameObject;
-                    armorScript = componentparent.gameObject.GetComponent<ArmorScript>();
-                    noArmorScript = componentparent.gameObject.GetComponent<NoArmorScript>();
-                    while (armorScript == null && noArmorScript == null)
-                    {
-                        componentparent = componentparent.transform.parent.gameObject;
+                        Physics.SphereCast(mCollider.transform.position + APDirection * 0.5f, 0.25f, APDirection, out hit, 2.0f * APFixedSp, layermask);
+                        hitangle = Vector3.Angle(-1 * APDirection, hit.normal);
+                        hitrigidbody = hit.collider.gameObject.GetComponent<Rigidbody>();
+                        componentfind = hit.collider.gameObject;
+                        while (hitrigidbody == null)
+                        {
+                            componentfind = componentfind.transform.parent.gameObject;
+                            hitrigidbody = componentfind.gameObject.GetComponent<Rigidbody>();
+                        }
+                        componentparent = hit.collider.gameObject;
                         armorScript = componentparent.gameObject.GetComponent<ArmorScript>();
                         noArmorScript = componentparent.gameObject.GetComponent<NoArmorScript>();
-                    }
-                    if (hitrigidbody != null)
-                    {
-                        if(componentparent.GetComponent<ArmorScript>())
+                        while (armorScript == null && noArmorScript == null)
                         {
-                            armorScript = componentparent.gameObject.transform.GetComponent<ArmorScript>();
-                            armornumber = 1;
-                            ApparentAromrThickness = armorScript.armorthickness /(float)Math.Cos((hitangle * (100f - APcoefficient) / 100f) * Math.PI/180);
-                            
+                            componentparent = componentparent.transform.parent.gameObject;
+                            armorScript = componentparent.gameObject.GetComponent<ArmorScript>();
+                            noArmorScript = componentparent.gameObject.GetComponent<NoArmorScript>();
                         }
-                        if (componentparent.GetComponent<NoArmorScript>())
+                        if (hitrigidbody != null)
                         {
-                            noArmorScript = componentparent.gameObject.transform.GetComponent<NoArmorScript>();
-                            armornumber = 2;
-                        }
-                        PenetrationValue = StandardPenetration * this.rigidbody.velocity.magnitude / APSpeed;
-                        Penetrationjudgment();
-                    }
-                    init = true;
-                    
-                }
-            }
+                            if (componentparent.GetComponent<ArmorScript>())
+                            {
+                                armorScript = componentparent.gameObject.transform.GetComponent<ArmorScript>();
+                                armornumber = 1;
+                            if(60f < hitangle && hitangle < 80f)
+                            {
+                                hitangle = 60f;
+                            }
+                                ApparentAromrThickness = armorScript.armorthickness / (float)Math.Cos((hitangle * (100f - APcoefficient) / 100f) * Math.PI / 180);
 
+                            }
+                            if (componentparent.GetComponent<NoArmorScript>())
+                            {
+                                noArmorScript = componentparent.gameObject.transform.GetComponent<NoArmorScript>();
+                                armornumber = 2;
+                            }
+                            PenetrationValue = StandardPenetration * this.rigidbody.velocity.magnitude / APSpeed;
+                            Penetrationjudgment();
+                        }
+                        init = true;
+
+                    }
+                }  
         }
         //ŠÑ’Ê”»’è
         public void Penetrationjudgment()
@@ -341,18 +354,15 @@ namespace TBCStusSpace
         public void OnDisable()
         {
             init = false;
-
-
         }
+        public void Update()
+        { }
+        public void OnEnable()
+        { }
         public void OnTriggerEnter()
         {
         }
-        public void OnEnable()
-        {
-        }
         public void OnCollisionEnter()
-        { }
-        public void Update()
         { }
         public void ValidCollisionOrTrigger()
         { }

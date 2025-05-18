@@ -241,9 +241,25 @@ namespace TBCStusSpace
         {
             if (StatMaster.isMP)
             {
-                ushort BlockPlayerID = BlockBehaviour.ParentMachine.PlayerID;
-                ushort LocalPlayerID = PlayerMachine.GetLocal().Player.NetworkId;
-                isOwnerSame = BlockPlayerID == LocalPlayerID;
+                ushort num;
+                try
+                {
+                    num = base.BlockBehaviour.ParentMachine.PlayerID;
+                }
+                catch
+                {
+                    num = 50;
+                }
+                ushort num2;
+                try
+                {
+                    num2 = PlayerMachine.GetLocal().Player.NetworkId;
+                }
+                catch
+                {
+                    num2 = 100;
+                }
+                isOwnerSame = num == num2;
             }
             else
             {

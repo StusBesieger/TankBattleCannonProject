@@ -27,6 +27,10 @@ namespace TBCStusSpace
             {58, typeof(NoArmorScript) },
             //ピンブロック
             {57, typeof(NoArmorScript) },
+            //ブレース
+            {7, typeof(NoArmorScript) },
+            //ロープウィンチ
+            {45, typeof(NoArmorScript) }
 
         };
         public override string Name
@@ -111,17 +115,6 @@ namespace TBCStusSpace
         
         //各メソッド設定
 
-        public void FixedUpdate()
-        {
-            if(bb.isSimulating)
-            {
-
-            }
-            else
-            {
-                
-            }
-        }
         public void Update()
         {
             if (bb.isSimulating)
@@ -238,7 +231,7 @@ namespace TBCStusSpace
             base.SafeAwake();
             bb = GetComponent<BlockBehaviour>();
             //装甲厚のスライダーと値を取得
-            ArmorSlider = bb.AddSlider("Armor thickness", "armorvalue", 25f, 10f, 175f);
+            ArmorSlider = bb.AddSlider("Armor thickness", "armorvalue", 25f, 10f, 200f);
             
         }
 
@@ -253,7 +246,11 @@ namespace TBCStusSpace
             {
                 if(armorthickness >150f)
                 {
-                    rigidbody.mass = Dmass *(armorvalue / 25f * 4f - 18f);
+                    rigidbody.mass = Dmass *(armorvalue / 5f - 20f);
+                }
+                else if(armorthickness > 100f)
+                {
+                    rigidbody.mass = Dmass * (armorvalue * 6f / 50f - 8f );
                 }
                 else
                 {
@@ -269,8 +266,17 @@ namespace TBCStusSpace
                 }
                 else
                 {
-                    jointchange.breakForce = jointvalue / changevalue;
-                    jointchange.breakTorque = jointvalue / changevalue;
+                    if(bb.BlockID == 5)
+                    {
+                        jointchange.breakForce = jointvalue / changevalue * 1.25f;
+                        jointchange.breakTorque = jointvalue / changevalue * 1.25f;
+                    }
+                    else
+                    {
+                        jointchange.breakForce = jointvalue / changevalue;
+                        jointchange.breakTorque = jointvalue / changevalue;
+
+                    }
                 }
             }
             if (hingejointchange)

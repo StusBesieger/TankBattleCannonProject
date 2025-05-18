@@ -22,170 +22,188 @@ namespace TBCStusSpace
     {
         [XmlElement("RangeFindKey")]
         [RequireToValidate]
-        public MKeyReference SpotKey;
+        public MKeyReference FindKey;
 
         [XmlElement("FindRange")]
         [DefaultValue(0f)]
         [Reloadable]
-        public float SpotRange;
+        public float FindRange;
 
     }
     public class TBCAddRangeFinderBehaviour : BlockModuleBehaviour<TBCAddRangeFinderModule>
     {
-        public BlockBehaviour bb;
-        public int blockID;
-        public int Relaodnum = 0;
-        private Vector3 ThisDirection;
-        public MKey SpotStart;
-        public Collider mCollider;
-        public float Range; 
-        public LayerMask Blocklayermask = (1 << 0) | (1 << 12) | (1 << 14) | (1 << 25) | (1 << 26);
+        public int DictID = 0;
+        private BlockBehaviour blockBehaviour;
+
+        public MKey findKey;
+        private bool findOK = false;
+        public float findrange;
         private RaycastHit hit;
-        private bool Spottrue = false;
-        public string SpotReload ;
-        public bool isOwnerSame = false;
+        public Vector3 ThisDirection;
+        public LayerMask Blocklayermask = (1 << 0) | (1 << 12) | (1 << 14) | (1 << 25) | (1 << 26);
+        private bool isOwnerSame = false;
+        public string enemyrange = "NoTarget";
+        public bool ReLoading = true;
+
         private int windowId;
-        private Rect windowRect = new Rect(375, 800, 175,50);
-        private bool RangeOK = false;
-        public int RangeTime = 0;
-        private string rangeS = "No Find";
-        public bool press = false;
+        private Rect windowRect = new Rect(375, 800, 175, 50);
+        public override void OnBlockPlaced()
+        {
+            base.OnBlockPlaced();
+        }
+        public  void Awake()
+        {
+            blockBehaviour = this.GetComponent<BlockBehaviour>();
+
+            if(blockBehaviour.isBuildBlock)
+            {
+                while (Mod.RangeboolDict.ContainsKey(DictID))
+                {
+                    DictID++;
+                }
+                Mod.RangeboolDict.Add(DictID, value: false);
+                Mod.RangeDistanceDict.Add(DictID, value:"NoTarget");
+            }
+        }
         public override void OnSimulateStart()
         {
             base.OnSimulateStart();
-
-            Range = Module.SpotRange;
-            blockID = BlockId;
-            windowId = ModUtility.GetWindowId();
-            try
-            {
-                SpotStart = GetKey(Module.SpotKey);
-            }
-            catch
-            {
-                Mod.Error("BlockID" + blockID + "error");
-            }
+            findKey = GetKey(Module.FindKey);
+            findrange = Module.FindRange;
             UpdateOwnerFlag();
+            windowId = ModUtility.GetWindowId();
+        }
+        public override void OnSimulateStop()
+        {
+            base.OnSimulateStop();
+            isOwnerSame = false;
+            Mod.RangeboolDict.Remove(DictID);
+            Mod.RangeDistanceDict.Remove(DictID);
+        }
+        public override void SimulateFixedUpdateHost()
+        {
+            base.SimulateFixedUpdateHost();
+            if(findOK)
+            {
+                ThisDirection = -transform.up;
+                if(Physics.SphereCast(this.transform.position + 3f * ThisDirection, 0.25f, ThisDirection, out hit, findrange, Blocklayermask))
+                {
+                    StartCoroutine(RangeFinding());
+                }
+                findOK = false;
+                ReLoading = false;
+                Mod.RangeBmessage = Mod.RangeBmessageType.CreateMessage(DictID, ReLoading);
+                ModNetworking.SendToAll(Mod.RangeBmessage);
+                StartCoroutine(RangeReLoding());
+            }
+        }
+        public override void SimulateUpdateAlways()
+        {
+            base.SimulateUpdateAlways();
+            RangeFinde();
+        }
+        public override void SimulateUpdateClient()
+        {
+            base.SimulateUpdateClient();
+            enemyrange = Mod.RangeDistanceDict[DictID];
+            ReLoading = Mod.RangeboolDict[DictID];
+        }
+        public override void SimulateUpdateHost()
+        {
+            base.SimulateUpdateHost();
+
+        }
+        private void RangeFinde()
+        {
+            if (findKey.IsPressed || findKey.EmulationPressed())
+            {
+                if(ReLoading)
+                {
+                    findOK = true;
+                }
+            }
         }
         private void UpdateOwnerFlag()  //プレイヤーとブロックの親が一緒か確認する関数
         {
             if (StatMaster.isMP)
             {
-                ushort BlockPlayerID = BlockBehaviour.ParentMachine.PlayerID;
-                ushort LocalPlayerID = PlayerMachine.GetLocal().Player.NetworkId;
-                isOwnerSame = BlockPlayerID == LocalPlayerID;
+                ushort num;
+                try
+                {
+                    num = base.BlockBehaviour.ParentMachine.PlayerID;
+                }
+                catch
+                {
+                    num = 50;
+                }
+                ushort num2;
+                try
+                {
+                    num2 = PlayerMachine.GetLocal().Player.NetworkId;
+                }
+                catch
+                {
+                    num2 = 100;
+                }
+                isOwnerSame = num == num2;
             }
             else
             {
                 isOwnerSame = true;
             }
         }
-        public override void OnSimulateStop()
+        IEnumerator RangeFinding()
         {
-            base.OnSimulateStop();
-            isOwnerSame = false;
-        }
-        public override void SafeAwake()
-        {
-            base.SafeAwake();
-        }
-        //キーを押された時の処理。
-        public override void SimulateUpdateAlways()
-        {
-            base.SimulateUpdateAlways();
-            if(SpotStart.IsPressed || SpotStart.EmulationPressed())
+            int num = 0;
+            for(int i = 0; i < 100; i++)
             {
-                Debug.Log("presse");
-                press = true;
+                if(Physics.SphereCast(this.transform.position + 3f * ThisDirection, 0.25f, ThisDirection, out hit, findrange, Blocklayermask))
+                {
+                    num++;
+                    enemyrange = num.ToString() + " %";
+                    Mod.RangeDmessage = Mod.RangeDmessageType.CreateMessage(DictID, enemyrange);
+                    ModNetworking.SendToAll(Mod.RangeDmessage);
+                }
+                yield return new WaitForFixedUpdate();
+            }
+            if(num > 75)
+            {
+                enemyrange = Math.Round(Vector3.Distance(this.transform.position, hit.point), 1).ToString();
+                Mod.RangeDmessage = Mod.RangeDmessageType.CreateMessage(DictID, enemyrange);
+                ModNetworking.SendToAll(Mod.RangeDmessage);
+            }
+            else
+            {
+                enemyrange = "miss!";
+                Mod.RangeDmessage = Mod.RangeDmessageType.CreateMessage(DictID, enemyrange);
+                ModNetworking.SendToAll(Mod.RangeDmessage);
             }
         }
-        public override void SimulateUpdateHost()
-        {
-            base.SimulateUpdateHost();
-            ThisDirection = - transform.up ;
-            if (press)
-            {
-                Debug.Log("presse updateHost");
-                if(Relaodnum == 0)
-                {
-                    if (Physics.SphereCast(this.transform.position + 3f * ThisDirection, 0.25f, ThisDirection, out hit, Range, Blocklayermask))
-                    {
-                        RangeOK = true;
 
-                    }
-                    Relaodnum = 1;
-                }
-                press = false;
-            }
-        }
-        public override void SimulateFixedUpdateHost()
+        IEnumerator RangeReLoding()
         {
-            base.SimulateFixedUpdateHost();
-            if (Relaodnum != 0)
-            {
-                Relaodnum++;
-            }
-            if (Relaodnum == 1000)
-            {
-                Relaodnum = 0;
-            }
-            if (0 != Relaodnum)
-            {
-                SpotReload = (Relaodnum / 10).ToString() + " %";
-            }
-            if (0 == Relaodnum)
-            {
-                SpotReload = "RangeFinder OK";
-            }
-            if(RangeOK)
-            {
-                if (Physics.SphereCast(this.transform.position + 3f * ThisDirection, 0.5f, ThisDirection, out hit, Range, Blocklayermask))
-                {
-                    if(Relaodnum < 150)
-                    {
-                        RangeTime++;
-                    }
-                }
-                if(Relaodnum > 150)
-                {
-                    RangeTime = 0;
-                    RangeOK = false;
-                    rangeS = "miss!";
-                }
-
-            }
-        }
-        public override void SimulateFixedUpdateAlways()
-        {
-            base.SimulateFixedUpdateAlways();
-            if (Relaodnum == 550)
-            {
-                rangeS = "No Find";
-            }
-            if (RangeTime == 100)
-            {
-                rangeS = Math.Round(Vector3.Distance(this.transform.position, hit.point), 1).ToString();
-                Debug.Log(rangeS);
-                RangeTime = 0;
-                RangeOK = false;
-            }
+            yield return new WaitForSeconds(7);
+            ReLoading = true;
+            Mod.RangeBmessage = Mod.RangeBmessageType.CreateMessage(DictID, ReLoading);
+            ModNetworking.SendToAll(Mod.RangeBmessage);
         }
         public void OnGUI()
         {
-            if(isOwnerSame )
+            if(isOwnerSame)
             {
                 windowRect = GUILayout.Window(windowId, windowRect, delegate (int windowId)
                 {
-                GUILayout.Label(SpotReload);
-                if (RangeTime < 100 && 1 < RangeTime )
-                {
-                    GUILayout.Label(RangeTime.ToString() + " % Time limit " + ((int)(Relaodnum / 1.5)).ToString() + " %");
-                }else
+                    if (ReLoading)
                     {
-                        GUILayout.Label(rangeS);
+                        GUILayout.Label("FindOK");
                     }
+                    else
+                    {
+                        GUILayout.Label("ReLoading");
+                    }
+                    GUILayout.Label(enemyrange);
                 }
-                , "Spot Reload");
+                , "RangeFinder");
             }
         }
     }

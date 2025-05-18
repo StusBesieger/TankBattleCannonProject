@@ -148,51 +148,32 @@ namespace TBCStusSpace
         }
     }
 
-    public class TBCProjectileController : ProjectileScript
+    public class TBCProjectileController : MonoBehaviour
     {
         private Rigidbody rigidbody;
         private Vector3 gravityforce = new Vector3(0.0f, -1.0f, 0.0f);
-        private Vector3 look;
-        private Quaternion lookrotation;
+        private Vector3 startCenterOfMass = new Vector3(0.0f, 0.0f, 0.0f);
+        private Vector3 changeCenterOfMass = new Vector3(0.0f, -1.0f, 0.0f);
         public float addgravity;
         public int time = 0;
-        public void Awake() 
+        
+        public  void FixedUpdate()
         {
-            base.Awake();
-            rigidbody = GetComponent<Rigidbody>();
-
-        }
-        public override void FixedUpdate()
-        {
-            if(addgravity != 0.0f)
+            if (this.gameObject.activeInHierarchy)
             {
-                rigidbody.AddForce(addgravity * gravityforce, ForceMode.Force);
-            }
-            if (this.rigidbody.velocity.magnitude == 0.0f)
-            {
-                return;
-            }
-            else
-            {
-                if(time == 1)
+                if(rigidbody == null)
                 {
-                    look = new Vector3(this.rigidbody.velocity.normalized.x, this.rigidbody.velocity.normalized.y, this.rigidbody.velocity.normalized.z);
-                    lookrotation = Quaternion.LookRotation(look, Vector3.up);
-                    this.transform.rotation = lookrotation;
+                    rigidbody = GetComponent<Rigidbody>();
                 }
-                else
+                if (addgravity != 0.0f)
                 {
-                    time++;
-                    return;
+                    rigidbody.AddForce(addgravity * gravityforce, ForceMode.Force);
+                }
+                if (this.rigidbody.centerOfMass == startCenterOfMass)
+                {
+                    this.rigidbody.centerOfMass = changeCenterOfMass;
                 }
             }
         }
-        public void OnEnable()
-        {
-        }
-        public void OnCollisionEnter()
-        { }
-        public void ValidCollisionOrTrigger()
-        { }
     }
 }

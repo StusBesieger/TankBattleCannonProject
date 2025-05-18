@@ -74,6 +74,8 @@ namespace TBCStusSpace
         private float totaldispersalArmor = 0f;
         public float armorAverage = 25f;
         public float armorDispersal = 0f;
+        public float totalDmass = 0f;
+        public float Dmass = 0f;
         private int BlockPlayerID =0 ;
         private string MachineName;
         private List<Player> players;
@@ -146,6 +148,7 @@ namespace TBCStusSpace
             {
                 totalArmor = 0f;
                 totaldispersalArmor = 0f;
+                totalDmass = 0f;
                 GetBlockStatus();
                 TimeCount = 0;
             }
@@ -159,6 +162,20 @@ namespace TBCStusSpace
             foreach(ArmorScript ChildObject in ChildObjects)
             {
                 totalArmor += ChildObject.armorthickness;
+                if (ChildObject.armorthickness > 150f)
+                {
+                    totalDmass += ChildObject.Dmass * (ChildObject.armorvalue / 5f - 20f);
+                }
+                else if(ChildObject.armorvalue > 100f)
+                {
+                    totalDmass += ChildObject.Dmass * (ChildObject.armorvalue * 6f / 50f - 8f);
+                }
+                else
+                {
+                    totalDmass += ChildObject.Dmass * ChildObject.armorvalue / 25f;
+                }
+
+
             }
             armorAverage = (float)Math.Round(totalArmor / ChildCount * 10) / 10;
             //•ªŽU
@@ -177,6 +194,7 @@ namespace TBCStusSpace
                     storageLocation.MachineName = MachineName;
                     storageLocation.armorAverage = armorAverage.ToString();
                     storageLocation.armorDispersal = armorDispersal.ToString();
+                    storageLocation.totalmass = totalDmass.ToString();
                 }
                 else
                 {
@@ -185,6 +203,7 @@ namespace TBCStusSpace
                     storageLocation.MachineName = MachineName;
                     storageLocation.armorAverage = armorAverage.ToString();
                     storageLocation.armorDispersal = armorDispersal.ToString();
+                    storageLocation.totalmass = totalDmass.ToString();
                 }
             }
         }
@@ -207,11 +226,12 @@ namespace TBCStusSpace
         public string MachineName   = "machine";
         public string armorAverage = "25";
         public string armorDispersal = "0";
+        public string totalmass = "0";
     }
     public class AddMachineStatusUI : SingleInstance<AddMachineStatusUI>
     {
         private int playercount ;
-        private Rect windowRect ;
+        private Rect windowRect;
         private Rect windowRect2;
         public string[,] MachineStatus;
         private bool windowOK;
@@ -245,7 +265,7 @@ namespace TBCStusSpace
             if (!StatMaster.isMainMenu && !StatMaster._customLevelSimulating)
             {
                 playercount = this.transform.childCount;
-                MachineStatus = new string[playercount, 4];
+                MachineStatus = new string[playercount, 5];
                 for (int i = 0; i < playercount; i++)
                 {
                     storageLocation = this.transform.GetChild(i).GetComponent<StorageLocation>();
@@ -255,16 +275,17 @@ namespace TBCStusSpace
                         MachineStatus[i, 1] = storageLocation.MachineName;
                         MachineStatus[i, 2] = storageLocation.armorAverage;
                         MachineStatus[i, 3] = storageLocation.armorDispersal;
+                        MachineStatus[i, 4] = storageLocation.totalmass;
                     }
                 }
             }
         }
         public void Awake()
         {
-            if(FileBrowserView == null)
+            windowId = ModUtility.GetWindowId();
+            windowId2 = ModUtility.GetWindowId();
+            if (FileBrowserView == null)
             {
-                windowId = ModUtility.GetWindowId();
-                windowId2 = ModUtility.GetWindowId();
                 FileBrowserView = GameObject.Find("HUD").transform.Find("FileBrowserView").gameObject;
                 ReturnToMenu = GameObject.Find("HUD").transform.Find("RETURN TO MENU").gameObject;
                 ServerMane = GameObject.Find("HUD").transform.Find("SERVER MANAGEMENT").gameObject;
@@ -281,7 +302,7 @@ namespace TBCStusSpace
                     GUI.DragWindow();
                  }, "Status Open?");
 
-                windowRect = new Rect(750, 200, 500, 100 + 10 * playercount);
+                windowRect = new Rect(750, 200, 550, 100 + 10 * playercount);
                 if(windowOK)
                 {
                     windowRect = GUILayout.Window(windowId, windowRect, delegate (int windowId)
@@ -292,6 +313,7 @@ namespace TBCStusSpace
                         GUILayout.Label("Machine Name  ");
                         GUILayout.Label("Armor Average  ");
                         GUILayout.Label("Armor Standard Deviation  ");
+                        GUILayout.Label("Machine Mass");
 
                         GUILayout.EndHorizontal();
 
@@ -303,6 +325,7 @@ namespace TBCStusSpace
                             GUILayout.Label(MachineStatus[i, 1]);
                             GUILayout.Label(MachineStatus[i, 2] + " mm");
                             GUILayout.Label(MachineStatus[i, 3]);
+                            GUILayout.Label(MachineStatus[i, 4]);
 
                             GUILayout.EndHorizontal();
                         }
