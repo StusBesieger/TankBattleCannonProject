@@ -21,10 +21,10 @@ namespace TBCStusSpace
     public class TBCAddHEModule : BlockModule
     {
 
-        [XmlElement("HEForce")]
+        [XmlElement("HEPenetration")]
         [DefaultValue(0f)]
         [Reloadable]
-        public float heForce;
+        public float hePenetration;
 
         [XmlElement("HERadius")]
         [DefaultValue(0f)]
@@ -38,12 +38,12 @@ namespace TBCStusSpace
         private Transform projectilmultipool;
         private TBCHEController tbchecontroller;
         public float TBCHEPosition;
-        public float TBCHEForce;
+        public float TBCHEPenetration;
         public float TBCHERadius;
         public override void OnSimulateStart()
         {
             base.OnSimulateStart();
-            TBCHEForce = Module.heForce;
+            TBCHEPenetration = Module.hePenetration;
             TBCHERadius = Module.heradius;
             adshootingbehavour = GetComponent<AdShootingBehavour>();
 
@@ -72,7 +72,7 @@ namespace TBCStusSpace
 
                                 tbchecontroller = child.gameObject.AddComponent<TBCHEController>();
                             }
-                            tbchecontroller.HEForce = TBCHEForce;
+                            tbchecontroller.HEPenetration = TBCHEPenetration;
                             tbchecontroller.HERadius = TBCHERadius;
                         }
                     }
@@ -81,63 +81,95 @@ namespace TBCStusSpace
 
         }
     }
-    public class TBCHEController : AdExplosionEffect
+    public class TBCHEController : MonoBehaviour
     {
-        public float HERadius;
+        private TBCExplodeJointController TBCExplodeJointController;
+        private ArmorScript ArmorScript;
+        private Rigidbody rigidbody;
+        private BlockBehaviour blockBehaviour;
+        private FireTag FireTag;
+        public float HERadius = 1f;
+        public float ExplodeRadius = 1f;
         public LayerMask layermask = (1 << 0) | (1 << 12) | (1 << 14) | (1 << 25) | (1 << 26);
         public bool init;
         private int hitnumber = 0;
-        private Rigidbody rb;
-        public float HEForce;
+        public float HEPenetration;
         public float hitposition;
-        private ArmorScript ArmoS;
         public void OnDisable()
         {
             init = false;
         }
-        public new void FixedUpdate()
+        public void Explodejudgment()
         {
-            if (!init)
+            hitnumber = 0;
+            TBCExplodeJointController = this.gameObject.GetComponent<TBCExplodeJointController>();
+            Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, 2.5f, layermask);
+            foreach(Collider hitcollider in hitColliders)
             {
-                if (!StatMaster.isMP || StatMaster.isHosting || StatMaster.isLocalSim)   //�}���`�łȂ� or �z�X�g�ł��� or ���[�J���V�~���ł���
+                ArmorScript = hitcollider.gameObject.GetComponent<ArmorScript>();
+                if(!ArmorScript)
                 {
-                    Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, HERadius, layermask);
-                    
-                    for (int i = 0; i< hitColliders.Length; i++)
+                    ArmorScript = hitcollider.gameObject.transform.parent.gameObject.GetComponent<ArmorScript>();
+                }
+                if(ArmorScript != null)
+                {
+                    if(HEPenetration >= ArmorScript.armorthickness)
                     {
-                        rb = hitColliders[i].GetComponent<Rigidbody>();
-                        if (rb)
-                        {
-                            hitnumber++;
-                        }
-                    }
-                    for (int i = 0; i < hitColliders.Length; i++)
-                    {
-                        rb = hitColliders[i].GetComponent<Rigidbody>();
-                        if (rb)
-                        {
-                            if(hitnumber == 0)
-                            {
-                                hitnumber = 1;
-                            }
-                            hitposition = Vector3.Distance(this.transform.position, hitColliders[i].transform.position) + 0.5f;
-                            rb.AddExplosionForce(HEForce / hitposition, this.transform.position, HERadius, 0.0f, ForceMode.Impulse);
-                            ArmoS = hitColliders[i].GetComponent<ArmorScript>();
-                            if (ArmoS)
-                            {
-                                if (ArmoS.armorthickness < HEForce * 0.1f)
-                                {
-                                    rb.AddExplosionForce(HEForce * 2f / hitposition, this.transform.position, HERadius * 0.5f, 0.0f, ForceMode.Impulse);
-
-                                }
-                            }
-                        }
+                        hitnumber++;
                     }
                 }
-                init = true;
             }
-            base.FixedUpdate();
+            if(hitColliders.Length == 0)
+            {
+                TBCExplodeJointController.radius = 1f;
 
+            }
+            else
+            {
+                if((float)hitnumber/hitColliders.Length >0.66f)
+                {
+                    ExplodeRadius = HERadius;
+                    TBCExplodeJointController.range = HERadius;
+                }
+                else if((float)hitnumber / hitColliders.Length > 0.5f)
+                {
+                    ExplodeRadius = HERadius / 2f;
+                    TBCExplodeJointController.range = HERadius / 2f;
+                }
+                else
+                {
+                    ExplodeRadius = HERadius / 4f;
+                    TBCExplodeJointController.range = HERadius / 4f;
+                }
+            }
+            HEExplode();
+
+        }
+        public void HEExplode()
+        {
+            Collider[] HEColliders = Physics.OverlapSphere(this.transform.position, ExplodeRadius, layermask);
+            foreach(Collider hecollider in HEColliders)
+            {
+                rigidbody = hecollider.gameObject.GetComponent<Rigidbody>();
+                
+                if(!rigidbody)
+                {
+                    rigidbody = hecollider.gameObject.transform.parent.gameObject.GetComponent<Rigidbody>();
+                }
+                if(rigidbody != null)
+                {
+                    blockBehaviour = rigidbody.gameObject.GetComponent<BlockBehaviour>();
+                    if(blockBehaviour.BlockID == 23 || blockBehaviour.BlockID == 59 || rigidbody.gameObject.GetComponent<AdEnhancedAmmunitionDepot>() || rigidbody.gameObject.GetComponent<AdAmmunitionStorage>())
+                    {
+                        FireTag = rigidbody.gameObject.GetComponent<FireTag>();
+                        if (FireTag != null)
+                        {
+                            FireTag.Ignite();
+                        }
+                    }
+                    rigidbody.AddExplosionForce(ExplodeRadius * 15f, this.transform.position, ExplodeRadius, 5.0f, ForceMode.Impulse);
+                }
+            }
         }
     }
 }

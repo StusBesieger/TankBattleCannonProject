@@ -63,7 +63,7 @@ namespace TBCStusSpace
         public GameObject playerObject;
         public StorageLocation storageLocation;
 
-        private int TimeRepeat = 250;
+        private int TimeRepeat = 50;
         private int TimeCount = 0;
         private GameObject BuildPGameObject;
         private GameObject GUIMachineStatusMaster;
@@ -80,6 +80,12 @@ namespace TBCStusSpace
         private string MachineName;
         private List<Player> players;
         private string PlayerName;
+
+        public GameObject parentSim;
+        public WaterCannonController[] waterCannonControllers;
+        private float waterC1 = 1f;
+        private float waterC2 = 1f;
+        public float waterpowerchange = 1f;
         public void Awake()
         {
             bb = this.GetComponent<BlockBehaviour>();
@@ -87,6 +93,10 @@ namespace TBCStusSpace
             {
                 //OnBlockPlaced();
                 
+            }
+            else
+            {
+                OnSimulateStart();
             }
         }
         public void FixedUpdate()
@@ -184,7 +194,10 @@ namespace TBCStusSpace
                 totaldispersalArmor += (float)Math.Pow(ChildObject.armorthickness - armorAverage, 2);
             }
             armorDispersal = (float)Math.Round((float)Math.Pow(totaldispersalArmor / ChildCount , 0.5)* 10f) / 10f;
-            if(storageLocation != null)
+            waterC1 = Mathf.Pow(Mathf.Clamp(armorAverage / 10f - 2f, 0.5f, 8f) * armorDispersal * armorDispersal, 0.5f);
+            waterC2 = Mathf.Clamp(25f - 8f * Mathf.Log(waterC1, 5f), 0.5f, 12f);
+            waterpowerchange = (float)Math.Round(Mathf.Clamp(waterC2, 0.5f, 8f) * 10f) / 10f;
+            if (storageLocation != null)
             {
                 if (StatMaster.isMP)
                 {
@@ -195,6 +208,7 @@ namespace TBCStusSpace
                     storageLocation.armorAverage = armorAverage.ToString();
                     storageLocation.armorDispersal = armorDispersal.ToString();
                     storageLocation.totalmass = totalDmass.ToString();
+                    storageLocation.waterpower = waterpowerchange.ToString();
                 }
                 else
                 {
@@ -204,7 +218,30 @@ namespace TBCStusSpace
                     storageLocation.armorAverage = armorAverage.ToString();
                     storageLocation.armorDispersal = armorDispersal.ToString();
                     storageLocation.totalmass = totalDmass.ToString();
+                    storageLocation.waterpower = waterpowerchange.ToString();
                 }
+            }
+        }
+        public override void OnSimulateStart()
+        {
+            parentSim = this.gameObject;
+            while(parentSim.gameObject.name != "Simulation Machine")
+            {
+                parentSim = parentSim.transform.parent.gameObject;
+            }
+            waterCannonControllers = parentSim.GetComponentsInChildren<WaterCannonController>();
+            if(waterCannonControllers != null)
+            {
+                StartCoroutine(WaterPowerChange());
+            }
+        }
+        IEnumerator WaterPowerChange()
+        {
+            yield return new WaitForFixedUpdate();
+            foreach (WaterCannonController waterCannonController in waterCannonControllers)
+            {
+                waterCannonController.StrengthSlider.Value = waterpowerchange;
+                waterCannonController.StrengthSlider.SetValue(waterpowerchange);
             }
         }
         public void OnDisable()
@@ -227,6 +264,7 @@ namespace TBCStusSpace
         public string armorAverage = "25";
         public string armorDispersal = "0";
         public string totalmass = "0";
+        public string waterpower = "0";
     }
     public class AddMachineStatusUI : SingleInstance<AddMachineStatusUI>
     {
@@ -265,7 +303,7 @@ namespace TBCStusSpace
             if (!StatMaster.isMainMenu && !StatMaster._customLevelSimulating)
             {
                 playercount = this.transform.childCount;
-                MachineStatus = new string[playercount, 5];
+                MachineStatus = new string[playercount, 6];
                 for (int i = 0; i < playercount; i++)
                 {
                     storageLocation = this.transform.GetChild(i).GetComponent<StorageLocation>();
@@ -276,6 +314,7 @@ namespace TBCStusSpace
                         MachineStatus[i, 2] = storageLocation.armorAverage;
                         MachineStatus[i, 3] = storageLocation.armorDispersal;
                         MachineStatus[i, 4] = storageLocation.totalmass;
+                        MachineStatus[i, 5] = storageLocation.waterpower;
                     }
                 }
             }
@@ -293,9 +332,9 @@ namespace TBCStusSpace
         }
         public void OnGUI()
         {
-            if (!StatMaster.isMainMenu && !StatMaster._customLevelSimulating && !StatMaster.isLocalSim && !FileBrowserView.activeSelf && !ReturnToMenu.activeSelf && !ServerMane.activeSelf)
+            if (!StatMaster.isMainMenu && !StatMaster._customLevelSimulating && !StatMaster.isLocalSim && !StatMaster.levelSimulating && !FileBrowserView.activeSelf && !ReturnToMenu.activeSelf && !ServerMane.activeSelf)
             {
-                windowRect2 = new Rect(550, 200, 150, 50);
+                windowRect2 = new Rect(250, 800, 150, 50);
                 windowRect2 = GUILayout.Window(windowId2, windowRect2, delegate
                  {
                     windowOK = GUILayout.Toggle(windowOK,"Open");
@@ -313,7 +352,8 @@ namespace TBCStusSpace
                         GUILayout.Label("Machine Name  ");
                         GUILayout.Label("Armor Average  ");
                         GUILayout.Label("Armor Standard Deviation  ");
-                        GUILayout.Label("Machine Mass");
+                        GUILayout.Label("Machine Mass  ");
+                        GUILayout.Label("Machine Water Power");
 
                         GUILayout.EndHorizontal();
 
@@ -326,6 +366,7 @@ namespace TBCStusSpace
                             GUILayout.Label(MachineStatus[i, 2] + " mm");
                             GUILayout.Label(MachineStatus[i, 3]);
                             GUILayout.Label(MachineStatus[i, 4]);
+                            GUILayout.Label(MachineStatus[i, 5]);
 
                             GUILayout.EndHorizontal();
                         }

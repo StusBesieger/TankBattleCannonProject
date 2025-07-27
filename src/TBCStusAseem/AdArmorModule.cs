@@ -5,6 +5,7 @@ using Modding;
 using Modding.Blocks;
 using Modding.Serialization;
 using UnityEngine;
+using skpCustomModule;
 
 namespace TBCStusSpace
 {
@@ -92,6 +93,8 @@ namespace TBCStusSpace
         public ConfigurableJoint jointchange;
         public HingeJoint hingejointchange;
         private BlockBehaviour bb;
+
+        public AdShootingBehavour adShootingBehavour;
         public MSlider ArmorSlider;
 
         public ConfigurableJoint jointobject;
@@ -112,6 +115,10 @@ namespace TBCStusSpace
         public float Dmass = 1.0f;
         public int i = 1;
         public float massdata;
+
+        public ArmorScript subarmorscript;
+        public float subarmorthickness = 0f;
+        public int armorhp = 5;
         
         //各メソッド設定
 
@@ -208,6 +215,7 @@ namespace TBCStusSpace
         {
             //根本接続、重量の変更
             StartCoroutine(StateChange(armorvalue));
+            StartCoroutine(SetSubArmor());
         }
         public override void BuildingUpdate()
         {
@@ -225,13 +233,28 @@ namespace TBCStusSpace
                 }
 
             }
+            if (adShootingBehavour != null)
+            {
+                if (ArmorSlider.Value > 50f)
+                {
+                    ArmorSlider.SetValue(50f);
+                }
+            }
         }
         public override void SafeAwake()
         {
             base.SafeAwake();
             bb = GetComponent<BlockBehaviour>();
             //装甲厚のスライダーと値を取得
-            ArmorSlider = bb.AddSlider("Armor thickness", "armorvalue", 25f, 10f, 200f);
+            if(this.gameObject.GetComponent<AdShootingBehavour>() != null)
+            {
+                adShootingBehavour = this.gameObject.GetComponent<AdShootingBehavour>();
+                ArmorSlider = bb.AddSlider("Armor thickness", "armorvalue", 25f, 10f, 50f);
+            }
+            else
+            {
+                ArmorSlider = bb.AddSlider("Armor thickness", "armorvalue", 25f, 10f, 200f);
+            }
             
         }
 
@@ -283,6 +306,27 @@ namespace TBCStusSpace
             {
                 hingejointchange.breakForce = hingejointvalue / changevalue;
                 hingejointchange.breakTorque = hingejointvalue / changevalue;
+            }
+        }
+        IEnumerator SetSubArmor()
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            armorhp = 5;
+            Joint joint = bb.blockJoint;
+            if (joint)
+            {
+                subarmorscript = joint.connectedBody.GetComponent<ArmorScript>();
+                if (subarmorscript)
+                {
+                    subarmorthickness = subarmorscript.armorvalue;
+                }
+            }
+            else
+            {
+                subarmorthickness = 0f;
             }
         }
 

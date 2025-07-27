@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="AdCustomModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\workshop\content\346010\1778796598\AddCustomModuleMod\AdCustomModule.dll</HintPath>
+      <HintPath>..\..\..\1778796598\AddCustomModuleMod\AdCustomModule.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(BESIEGE_GAME_ASSEMBLIES)Assembly-CSharp.dll</HintPath>

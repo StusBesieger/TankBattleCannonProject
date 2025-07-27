@@ -63,7 +63,7 @@ namespace TBCStusSpace
 
             if (blockBehaviour.isBuildBlock)
             {
-                while (Mod.RangeboolDict.ContainsKey(DictID))
+                while (Mod.SpotEffecboolDict.ContainsKey(DictID))
                 {
                     DictID++;
                 }
@@ -104,7 +104,6 @@ namespace TBCStusSpace
                 ThisDirection = -transform.up;
                 if (Physics.SphereCast(this.transform.position + 3f * ThisDirection, 0.25f, ThisDirection, out hit, Range, Blocklayermask))
                 {
-                    Debug.Log("ray");
                     if(SpotReloading)
                     {
                         StartCoroutine(Spot());

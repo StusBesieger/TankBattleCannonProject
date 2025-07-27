@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +28,7 @@ namespace TBCStusSpace
         [XmlElement("AmmoFunction")]
         [DefaultValue(5f)]
         [Reloadable]
-        public int AmmoFunction;
+        public float AmmoFunction;
 
         [XmlElement("UseMagazine")]
         [DefaultValue(false)]
@@ -45,14 +45,15 @@ namespace TBCStusSpace
     {
         private AdShootingBehavour adshootingbehavour;
         private AdProjectileScript adprojectilescript;
+        private AdExplosionEffect AdExplosionEffect;
         private TBCProjectileController tbcprojectilecontroller;
+        private TBCExplodeJointController TBCExplodeJointController;
         private GameObject projectilepool;
         private Transform projectilmultipool;
 
         public float TBCGravity;
-        public int TBCAmmoFunction = 5;
+        public float TBCAmmoFunction = 5;
         public int TBCAmmoStock = 10;
-        public bool start = false;
         public bool UseMagazine = false;
         public int MagazineCapacity;
         public override void OnBlockPlaced()
@@ -69,12 +70,12 @@ namespace TBCStusSpace
             MagazineCapacity = Module.MagazineCapacity;
 
             adshootingbehavour = this.GetComponent<AdShootingBehavour>();
-            //c’e”İ’è
+            //æ®‹å¼¾æ•°è¨­å®š
             if (StatMaster.isHosting || !StatMaster.isMP || StatMaster.isLocalSim)
             {
-                //’e‚ÉƒXƒNƒŠƒvƒg‚ğ“\‚è•t‚¯‚é
+                //å¼¾ã«ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’è²¼ã‚Šä»˜ã‘ã‚‹
 
-                //ƒŒƒxƒ‹ƒGƒfƒBƒ^Aƒ}ƒ‹ƒ`ˆÈŠO
+                //ãƒ¬ãƒ™ãƒ«ã‚¨ãƒ‡ã‚£ã‚¿ã€ãƒãƒ«ãƒä»¥å¤–
                 projectilepool = GameObject.Find("PHYSICS GOAL");
 
                 foreach (Transform child in projectilepool.transform)
@@ -85,7 +86,7 @@ namespace TBCStusSpace
 
                         adprojectilescript = child.gameObject.GetComponent<AdProjectileScript>();
 
-                        //ƒuƒƒbƒN–¼‚ª“¯‚¶‚È‚çƒXƒNƒŠƒvƒg‚ğ“\‚è•t‚¯‚é
+                        //ãƒ–ãƒ­ãƒƒã‚¯åãŒåŒã˜ãªã‚‰ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’è²¼ã‚Šä»˜ã‘ã‚‹
                         if (adshootingbehavour.BlockName == adprojectilescript.BlockName)
                         {
 
@@ -101,7 +102,7 @@ namespace TBCStusSpace
                     }
                 }
 
-                //ƒŒƒxƒ‹ƒGƒfƒBƒ^Aƒ}ƒ‹ƒ`‚Ì‚Æ‚«
+                //ãƒ¬ãƒ™ãƒ«ã‚¨ãƒ‡ã‚£ã‚¿ã€ãƒãƒ«ãƒã®ã¨ã
                 projectilmultipool = GameObject.Find("PManager").transform.Find("Projectile Pool");
 
                 foreach (Transform child in projectilmultipool.transform)
@@ -112,7 +113,7 @@ namespace TBCStusSpace
 
                         adprojectilescript = child.gameObject.GetComponent<AdProjectileScript>();
 
-                        //ƒuƒƒbƒN–¼‚ª“¯‚¶‚È‚çƒXƒNƒŠƒvƒg‚ğ“\‚è•t‚¯‚é
+                        //ãƒ–ãƒ­ãƒƒã‚¯åãŒåŒã˜ãªã‚‰ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’è²¼ã‚Šä»˜ã‘ã‚‹
                         if (adshootingbehavour.BlockName == adprojectilescript.BlockName)
                         {
 
@@ -127,23 +128,45 @@ namespace TBCStusSpace
                         }
                     }
                 }
-            }
+                projectilmultipool = GameObject.Find("PManager").transform.Find("EffectPool");
 
-		}
-        public void FixedUpdate()
-        {
-            if(start)
-            {
-                adshootingbehavour.AmmoLeft = TBCAmmoStock / TBCAmmoFunction;
-                if(UseMagazine)
+                foreach (Transform child in projectilmultipool)
                 {
-                    if(adshootingbehavour.AmmoLeft >= MagazineCapacity)
+
+                    if (child.name == "ExplosionEffect")
                     {
-                        adshootingbehavour.AmmoLeft = MagazineCapacity;
-                        adshootingbehavour.AmmoStock = TBCAmmoStock / TBCAmmoFunction - MagazineCapacity;
+
+                        AdExplosionEffect = child.gameObject.GetComponent<AdExplosionEffect>();
+
+                        //ï¿½uï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½gï¿½ï¿½\ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½
+                        if (adshootingbehavour.BlockName == AdExplosionEffect.BlockName)
+                        {
+
+                            TBCExplodeJointController = child.gameObject.GetComponent<TBCExplodeJointController>();
+
+                            if (TBCExplodeJointController == null)
+                            {
+
+                                TBCExplodeJointController = child.gameObject.AddComponent<TBCExplodeJointController>();
+                            }
+                        }
                     }
                 }
-                start = false;
+
+            }
+            StartCoroutine(AmmoChange());
+		}
+        IEnumerator AmmoChange()
+        {
+            yield return new WaitForFixedUpdate();
+            adshootingbehavour.AmmoLeft = (int)(TBCAmmoStock / TBCAmmoFunction);
+            if (UseMagazine)
+            {
+                if (adshootingbehavour.AmmoLeft >= MagazineCapacity)
+                {
+                    adshootingbehavour.AmmoLeft = MagazineCapacity;
+                    adshootingbehavour.AmmoStock = (int)(TBCAmmoStock / TBCAmmoFunction) - MagazineCapacity;
+                }
             }
         }
     }
@@ -175,5 +198,62 @@ namespace TBCStusSpace
                 }
             }
         }
+    }
+    public class TBCExplodeJointController : AdExplosionEffect
+    {
+        private ConfigurableJoint[] ConfigurableJoints;
+        private AdExplosionEffect AdExplosionEffect;
+        private TBCHEController TBCHEController;
+        private Rigidbody rigidbody;
+        public float range;
+        private bool init;
+        public LayerMask layermask = (1 << 0) | (1 << 12) | (1 << 14) | (1 << 25) | (1 << 26);
+        public void OnDisable()
+        {
+            init = false;
+        }
+        public new void FixedUpdate()
+        {
+            if (!init)
+            {
+                if (!StatMaster.isMP || StatMaster.isHosting || StatMaster.isLocalSim)
+                {
+                    AdExplosionEffect = this.gameObject.GetComponent<AdExplosionEffect>();
+                    range = AdExplosionEffect.radius;
+                    TBCHEController = this.gameObject.GetComponent<TBCHEController>();
+                    if (TBCHEController)
+                    {
+                        TBCHEController.Explodejudgment();
+                    }
+
+                    Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, range, layermask);
+                    for(int i = 0; i < hitColliders.Length; i++)
+                    {
+                        rigidbody = hitColliders[i].GetComponent<Rigidbody>();
+                        if(rigidbody)
+                        {
+                            ConfigurableJoints = hitColliders[i].GetComponents<ConfigurableJoint>();
+                            foreach (ConfigurableJoint configurableJoint in ConfigurableJoints)
+                            {
+                                configurableJoint.breakForce *= 0.75f;
+                                configurableJoint.breakTorque *= 0.75f;
+                            }
+                        }
+                        else
+                        {
+                            ConfigurableJoints = hitColliders[i].transform.parent.GetComponents<ConfigurableJoint>();
+                            foreach (ConfigurableJoint configurableJoint in ConfigurableJoints)
+                            {
+                                configurableJoint.breakForce *= 0.75f;
+                                configurableJoint.breakTorque *= 0.75f;
+                            }
+                        }
+                    }
+                }
+            }
+            init = true;
+
+        }
+
     }
 }

@@ -140,7 +140,6 @@ namespace TBCStusSpace
         public float APdis;
         public float APSp;
         public float APSpeed = 0.0f;
-        private float Penetrationdistance;
         public Vector3 ProjectileSp;
         public float APFixedSp;
         public float Projectilemath;
@@ -210,20 +209,25 @@ namespace TBCStusSpace
                         }
                         if (hitrigidbody != null)
                         {
-                            if (componentparent.GetComponent<ArmorScript>())
+                            if (armorScript)
                             {
-                                armorScript = componentparent.gameObject.transform.GetComponent<ArmorScript>();
                                 armornumber = 1;
                             if(60f < hitangle && hitangle < 80f)
                             {
                                 hitangle = 60f;
                             }
-                                ApparentAromrThickness = armorScript.armorthickness / (float)Math.Cos((hitangle * (100f - APcoefficient) / 100f) * Math.PI / 180);
 
+                                ApparentAromrThickness = armorScript.armorthickness * armorScript.armorhp / ((float)Math.Cos((hitangle * (100f - APcoefficient) / 100f) * Math.PI / 180) * 5f) + armorScript.subarmorthickness * 0.5f;
+                                if(armorScript.armorhp > 1)
+                                {
+                                    if(StandardPenetration > armorScript.armorthickness * 0.5f)
+                                    {
+                                        armorScript.armorhp--;
+                                    }
+                                }
                             }
-                            if (componentparent.GetComponent<NoArmorScript>())
+                            if (noArmorScript)
                             {
-                                noArmorScript = componentparent.gameObject.transform.GetComponent<NoArmorScript>();
                                 armornumber = 2;
                             }
                             PenetrationValue = StandardPenetration * this.rigidbody.velocity.magnitude / APSpeed;
@@ -237,8 +241,6 @@ namespace TBCStusSpace
         //ä—í îªíË
         public void Penetrationjudgment()
         {
-            Penetrationdistance = hit.distance;
-            APdis = Vector3.Distance(this.transform.position+ APDirection, hit.point);
             APSp = Vector3.Distance(this.rigidbody.velocity, hitrigidbody.velocity);
             if (hitangle < 80)
             {
@@ -297,47 +299,23 @@ namespace TBCStusSpace
         //ä—í èàóù
         IEnumerator Penetration()
         {
-            ProjectileSp = this.rigidbody.velocity.normalized;
-            mCollider.enabled = false;
-            Projectilemath = (APtime- 1f) / Time.deltaTime;
-            if (APFixedSp > APtime)
-            {
-                this.rigidbody.velocity = Penetrationdistance / Time.deltaTime * APDirection;
-                
-            }
             yield return new WaitForFixedUpdate();
-            mCollider.material.dynamicFriction = 5.0f ;
-            StartCoroutine(SecondPenetration());
-        }
-        IEnumerator SecondPenetration()
-        {
-            yield return new WaitForFixedUpdate();
-            hitrigidbody.AddForce(APSp * APDirection * (float)Math.Log(APtime, 4f)*(float)Math.Pow(APcoefficient + 1, 0.1f), ForceMode.Impulse);
-            if (APFixedSp > APtime)
+            this.gameObject.transform.position = hit.point + APDirection * APtime;
+            hitrigidbody.AddForce(APSp * APDirection * (float)Math.Log(APtime, 4f) * (float)Math.Pow(APcoefficient + 1, 0.1f), ForceMode.Impulse);
+
+            if (APStop)
             {
-                this.rigidbody.velocity = ProjectileSp * Projectilemath;
-            }
-            yield return new WaitForFixedUpdate();
-            mCollider.enabled = true;
-            if(APStop)
-            {
-                adProjectileScript.existenceTime = 0f;
-                adProjectileScript.Timefuse = Time.deltaTime;
+                adProjectileScript.alwaysExplodes = true;
                 this.rigidbody.velocity = Vector3.zero;
-                StartCoroutine(ThirdPenetration());
+                adProjectileScript.existenceTime = 1f;
+                adProjectileScript.Timefuse = Time.deltaTime;
+                
             }
             else
             {
                 init = false;
                 this.rigidbody.velocity *= 0.75f;
             }
-            
-        }
-        IEnumerator ThirdPenetration()
-        {
-            yield return new WaitForFixedUpdate();
-            init = false;
-            
         }
         //îÒä—í èàóù
         public IEnumerator NoPenetration()
@@ -347,8 +325,7 @@ namespace TBCStusSpace
             {
                 yield return new WaitForFixedUpdate();
             }
-            adProjectileScript.alwaysExplodes = true;
-            init = false;
+
 
         }
         public void OnDisable()

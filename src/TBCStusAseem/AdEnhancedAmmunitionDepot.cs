@@ -82,6 +82,7 @@ namespace TBCStusSpace
             foreach (AdShootingBehavour childobject in ChildObjects)
             {
                 childobject.PowerSlider.Value += 25;
+                childobject.RateOfFire.Value *= 0.925f;
             }
         }
     }

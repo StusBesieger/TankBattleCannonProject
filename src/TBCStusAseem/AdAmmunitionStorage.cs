@@ -25,15 +25,32 @@ namespace TBCStusSpace
         private TBCAddProjectileBehaviour[] ChildObjects;
         private Transform GOparent;
         private int num;
+
         private bool explodeOK = true;
         public AudioSource audiosource;
         public AudioClip sound;
         public GameObject EffectPrefab;
         public GameObject EffectObject;
         public ParticleSystem particleSystem;
+        private Vector3 Effectposition;
+        //メッセージ
+        public int DictID = 0;
+        public bool Ammogetmessage = false;
+        private bool Clientbool = false;
+        public override void SafeAwake()
+        {
+            base.SafeAwake();
+
+        }
         public override void OnBlockPlaced()
         {
             base.OnBlockPlaced();
+            while (Mod.AmmoEffecboolDict.ContainsKey(DictID))
+            {
+                DictID++;
+            }
+            Mod.AmmoEffecboolDict.Add(DictID, value: false);
+            Mod.AmmoPositionDict.Add(DictID, value: new Vector3(0f, 0f, 0f));
         }
         public override void OnSimulateStart()
         {
@@ -44,9 +61,9 @@ namespace TBCStusSpace
             particleSystem.Stop();
 
             audiosource = gameObject.AddComponent<AudioSource>();
-            audiosource.spatialBlend = 1.0f;
+            audiosource.spatialBlend = 0.95f;
             audiosource.volume = 1.5f;
-            sound = ModResource.GetAudioClip("HEHit");
+            sound = ModResource.GetAudioClip("explodeAmmo");
 
             GOparent = this.transform;
             if(bb == null)
@@ -64,7 +81,6 @@ namespace TBCStusSpace
             foreach (TBCAddProjectileBehaviour childobject in ChildObjects)
             {
                 childobject.TBCAmmoStock += 10/num;
-                childobject.start = true;
             }
         }
         public override void SimulateFixedUpdateAlways()
@@ -75,15 +91,55 @@ namespace TBCStusSpace
                 if (bb.BlockHealth.health == 0f)
                 {
                     Explode();
-                    audiosource.PlayOneShot(sound);
-                    EffectObject.transform.position = this.transform.position;
-
-                    particleSystem.Play();
+                    Effectposition = this.transform.position;
                     explodeOK = false;
+                    StartCoroutine(HPZero());
+                    audiosource.PlayOneShot(sound);
                 }
                 
             }
             
+        }
+        public override void SimulateUpdateHost()
+        {
+            base.SimulateUpdateHost();
+            if (Ammogetmessage)
+            {
+                EffectObject.transform.position = Effectposition;
+                EffectObject.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+                Mod.AmmoPositionmessage = Mod.AmmoPositionmessageType.CreateMessage(DictID, Effectposition);
+                ModNetworking.SendToAll(Mod.AmmoPositionmessage);
+            }
+            Mod.Ammoboolmessage = Mod.AmmoboolmessageTyope.CreateMessage(DictID, Ammogetmessage);
+            ModNetworking.SendToAll(Mod.Ammoboolmessage);
+        }
+        public override void SimulateUpdateClient()
+        {
+            base.SimulateUpdateClient();
+            Clientbool = Mod.AmmoEffecboolDict[DictID];
+            if (Clientbool)
+            {
+                if (!EffectObject.activeInHierarchy)
+                {
+                    EffectObject.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+                    EffectObject.SetActive(true);
+                    audiosource.PlayOneShot(sound);
+                }
+                EffectObject.transform.position = Mod.AmmoPositionDict[DictID];
+            }
+            else
+            {
+                if (EffectObject.activeInHierarchy)
+                {
+                    EffectObject.SetActive(false);
+                }
+            }
+        }
+        public override void OnSimulateStop()
+        {
+            base.OnSimulateStop();
+            Mod.AmmoEffecboolDict.Remove(DictID);
+            Mod.AmmoPositionDict.Remove(DictID);
         }
         public void Explode()
         {
@@ -107,9 +163,18 @@ namespace TBCStusSpace
                     {
                         fireTag.Ignite();
                     }
-                    rigidbody.AddExplosionForce(25, this.transform.position, 2.0f, 5.0f, ForceMode.Impulse);
+                    rigidbody.AddExplosionForce(50, this.transform.position, 2.0f, 5.0f, ForceMode.Impulse);
                 }
             }
+        }
+        IEnumerator HPZero()
+        {
+            audiosource.PlayOneShot(sound);
+            particleSystem.Play();
+            Ammogetmessage = true;
+            yield return new WaitForSeconds(5f);
+            Ammogetmessage = false;
+            particleSystem.Stop();
         }
     }
 }

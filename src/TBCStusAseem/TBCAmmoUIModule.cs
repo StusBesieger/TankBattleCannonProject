@@ -114,7 +114,8 @@ namespace TBCStusSpace
 
             TBCUI = Mod.TBC_UI;
             GenerateUI();
-            fireRate = rateOfFireSlider.Value;
+            StartCoroutine(RateSet());
+            fireRate = shootingBehavour.RateOfFire.Value;
 
             ammoUI.SetActive(false);
         }
@@ -185,6 +186,15 @@ namespace TBCStusSpace
             {
                 StartCoroutine(BulletTimerFadeIn(1 / fireRate));
             }
+        }
+
+        IEnumerator RateSet()
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            fireRate = shootingBehavour.RateOfFire.Value;
         }
 
         IEnumerator BulletTimerFadeIn(float time)   //リロード中にリロードスライダーを操作する関数
