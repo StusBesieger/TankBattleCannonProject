@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2097599926
+CRC: 3924484825
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 98c287b2a3f0e80ac3bbe8240efd08f5
+    Hash: 7f1111f8bee59b5f0a71afa0de53c5d1
   TypeTreeHash:
     serializedVersion: 2
     Hash: 83568dcf19eff87793c2767ef4e8a4af
@@ -27,6 +27,7 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/effect/TBCannon/HEexplosion.prefab
+- Assets/effect/TBCannon/GunShot.prefab
 - Assets/effect/TBCannon/shellTrail.prefab
 - Assets/effect/TBCannon/explosion.prefab
 - Assets/effect/TBCannon/Cannon.prefab
