@@ -336,10 +336,10 @@ namespace TBCStusSpace
             {
                 windowRect2 = new Rect(250, 800, 150, 50);
                 windowRect2 = GUILayout.Window(windowId2, windowRect2, delegate
-                 {
+                {
                     windowOK = GUILayout.Toggle(windowOK,"Open");
                     GUI.DragWindow();
-                 }, "Status Open?");
+                }, "Status Open?");
 
                 windowRect = new Rect(750, 200, 550, 100 + 10 * playercount);
                 if(windowOK)

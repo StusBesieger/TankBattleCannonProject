@@ -23,3 +23,4 @@ C:\Program Files (x86)\Steam\steamapps\common\Besiege\Besiege_Data\Mods\TankBatt
 C:\Program Files (x86)\Steam\steamapps\common\Besiege\Besiege_Data\Mods\TankBattleCannons Project\src\TBCStusAseem\obj\Debug\TBCStusAseem.csproj.CopyComplete
 C:\Program Files (x86)\Steam\steamapps\common\Besiege\Besiege_Data\Mods\TankBattleCannons Project\src\TBCStusAseem\obj\Debug\TBCStusAseem.dll
 C:\Program Files (x86)\Steam\steamapps\common\Besiege\Besiege_Data\Mods\TankBattleCannons Project\src\TBCStusAseem\obj\Debug\TBCStusAseem.pdb
+C:\Program Files (x86)\Steam\steamapps\common\Besiege\Besiege_Data\Mods\TankBattleCannons Project\src\TBCStusAseem\bin\Debug\AdCustomModule.dll

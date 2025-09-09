@@ -178,8 +178,8 @@ namespace TBCStusSpace
         }
         IEnumerator InitStart()
         {
-            yield return new WaitForFixedUpdate();
             init = false;
+            yield return new WaitForFixedUpdate();
         }
         public void FixedUpdate()
         {
@@ -246,30 +246,36 @@ namespace TBCStusSpace
             {
                 if(armornumber == 1 )
                 {
-                    
-                    if (PenetrationValue> ApparentAromrThickness)
+                    if(armorScript.useTrack)
                     {
-                        StartCoroutine(Penetration());
-                        if(ApparentAromrThickness> PenetrationValue*0.1)
-                        {
-                            APStop = true;
-                        }
+                        TrackPentration();
                     }
                     else
                     {
-                        StartCoroutine(NoPenetration());
-                        rnd = Random.Range(1,4);
-                        if(rnd == 1)
+                        if (PenetrationValue > ApparentAromrThickness)
                         {
-                            AudioSource.PlayOneShot(AudioClip1);
+                            StartCoroutine(Penetration());
+                            if (ApparentAromrThickness > PenetrationValue * 0.1)
+                            {
+                                APStop = true;
+                            }
                         }
-                        else if(rnd == 2)
+                        else
                         {
-                            AudioSource.PlayOneShot(AudioClip2);
-                        }
-                        else if(rnd == 3)
-                        {
-                            AudioSource.PlayOneShot(AudioClip3);
+                            StartCoroutine(NoPenetration());
+                            rnd = Random.Range(1, 4);
+                            if (rnd == 1)
+                            {
+                                AudioSource.PlayOneShot(AudioClip1);
+                            }
+                            else if (rnd == 2)
+                            {
+                                AudioSource.PlayOneShot(AudioClip2);
+                            }
+                            else if (rnd == 3)
+                            {
+                                AudioSource.PlayOneShot(AudioClip3);
+                            }
                         }
                     }
                 }
@@ -325,8 +331,16 @@ namespace TBCStusSpace
             {
                 yield return new WaitForFixedUpdate();
             }
-
-
+        }
+        //—š‘Ñ‚É–½’†
+        public void TrackPentration()
+        {
+            mCollider.material.dynamicFriction = 0.75f;
+            mCollider.material.staticFriction = 0.5f;
+            mCollider.material.frictionCombine = PhysicMaterialCombine.Maximum;
+            adProjectileScript.alwaysExplodes = false;
+            adProjectileScript.Timefuse = Time.deltaTime;
+            rigidbody.mass = 0.1f;
         }
         public void OnDisable()
         {

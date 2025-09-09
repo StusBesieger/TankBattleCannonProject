@@ -60,6 +60,7 @@ namespace TBCStusSpace
 			Modding.Modules.CustomModules.AddBlockModule<TBCAmmoUIModule, TBCAmmoUIBehaviour>("TBCAmmoUIModule", true);
 			Modding.Modules.CustomModules.AddBlockModule<TBCAddRangeFinderModule, TBCAddRangeFinderBehaviour>("TBCAddRangeFinderModule", true);
 			Modding.Modules.CustomModules.AddBlockModule<TBCAddFireExtinguisherModule, TBCAddFireExtinguisherBehaviour>("TBCAddFireExtinguisherModule", true);
+			Modding.Modules.CustomModules.AddBlockModule<AdCanUseChargeModule, AdChargeUsingBehaviour>("TBCAdCanUseChargeModule", true);
 			TBCController = new GameObject("TBCController");
 			UnityEngine.Object.DontDestroyOnLoad(TBCController);
 

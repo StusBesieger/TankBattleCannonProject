@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="AdAmmunitionStorage.cs" />
     <Compile Include="AdArmorModule.cs" />
+    <Compile Include="AdCharge.cs" />
     <Compile Include="AddMachineStatusUI.cs" />
     <Compile Include="AdEnhancedAmmunitionDepot.cs" />
     <Compile Include="AdFireExtinguisher.cs" />

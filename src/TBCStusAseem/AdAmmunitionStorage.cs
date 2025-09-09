@@ -175,6 +175,7 @@ namespace TBCStusSpace
             yield return new WaitForSeconds(5f);
             Ammogetmessage = false;
             particleSystem.Stop();
+            Destroy(this.gameObject);
         }
     }
 }

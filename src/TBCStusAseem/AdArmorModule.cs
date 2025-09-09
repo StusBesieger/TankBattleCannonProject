@@ -71,7 +71,7 @@ namespace TBCStusSpace
             {
                 try
                 {
-                    if(internalObject.GetComponent<ArmorScript>() == null)
+                    if(internalObject.GetComponent<ArmorScript>() == null && internalObject.GetComponent<Rigidbody>() !=null)
                     {
                         internalObject.gameObject.AddComponent<ArmorScript>();
                     }
@@ -91,6 +91,7 @@ namespace TBCStusSpace
     {
         public Rigidbody rigidbody;
         public ConfigurableJoint jointchange;
+        public ConfigurableJoint[] surfacejoint;
         public HingeJoint hingejointchange;
         private BlockBehaviour bb;
 
@@ -116,10 +117,16 @@ namespace TBCStusSpace
         public int i = 1;
         public float massdata;
 
+        public bool useTrack = false;
+        public MToggle TrackToggle;
+
         public ArmorScript subarmorscript;
         public float subarmorthickness = 0f;
         public int armorhp = 5;
-        
+
+        public BuildSurface BuildSurface;
+        public SurfaceVisualController SurfaceVisualController;
+
         //各メソッド設定
 
         public void Update()
@@ -179,7 +186,7 @@ namespace TBCStusSpace
                 if (rigidbody == null)
                 {
                     rigidbody = GetComponent<Rigidbody>();
-                    Dmass = rigidbody.mass;
+                    
                     if (rigidbody == null)
                     {
                         Debug.Log("TBCArmor error || Not Find Rigidbody");
@@ -216,22 +223,27 @@ namespace TBCStusSpace
             //根本接続、重量の変更
             StartCoroutine(StateChange(armorvalue));
             StartCoroutine(SetSubArmor());
+            TrackToggle.Toggled += delegate (bool value)
+            {
+                useTrack = value;
+
+            };
         }
         public override void BuildingUpdate()
         {
            
-            if(armorvalue != ArmorSlider.Value)
+            if(armorvalue != ArmorSlider.Value || this.gameObject.GetComponent<SurfaceVisualController>() != null)
             {
                 armorthickness = ArmorSlider.Value;
                 armorvalue = ArmorSlider.Value;
                 changevalue = (float)(Math.Log(armorvalue, 25f));
+                Dmass = rigidbody.mass;
                 massdata = Dmass * armorvalue / 25f;
                 if (this.transform.Find("TriggerForJoint2"))
                 {
                     jointobject.breakForce = jointvalue2 / changevalue;
                     jointobject.breakTorque = jointvalue2 / changevalue;
                 }
-
             }
             if (adShootingBehavour != null)
             {
@@ -245,17 +257,23 @@ namespace TBCStusSpace
         {
             base.SafeAwake();
             bb = GetComponent<BlockBehaviour>();
+            BuildSurface = GetComponent<BuildSurface>();
             //装甲厚のスライダーと値を取得
-            if(this.gameObject.GetComponent<AdShootingBehavour>() != null)
+            if (this.gameObject.GetComponent<AdShootingBehavour>() != null)
             {
                 adShootingBehavour = this.gameObject.GetComponent<AdShootingBehavour>();
                 ArmorSlider = bb.AddSlider("Armor thickness", "armorvalue", 25f, 10f, 50f);
+            }
+            else if(BuildSurface != null)
+            {
+                ArmorSlider = bb.AddSlider("Armor thickness", "armorvalue", 25f, 10f, 100f);
             }
             else
             {
                 ArmorSlider = bb.AddSlider("Armor thickness", "armorvalue", 25f, 10f, 200f);
             }
-            
+            TrackToggle = bb.AddToggle("UseTrack", "tracktoggle", useTrack);
+
         }
 
         public IEnumerator StateChange(float armorvalue)
@@ -265,9 +283,11 @@ namespace TBCStusSpace
             {
                 changevalue = 0.5f;
             }
-            if(rigidbody)
+            SurfaceVisualController = this.gameObject.GetComponent<SurfaceVisualController>();
+            if (rigidbody)
             {
-                if(armorthickness >150f)
+                Dmass = rigidbody.mass;
+                if (armorthickness >150f)
                 {
                     rigidbody.mass = Dmass *(armorvalue / 5f - 20f);
                 }
@@ -280,7 +300,8 @@ namespace TBCStusSpace
                     rigidbody.mass = Dmass * armorvalue / 25f;
                 }
             }
-            if (jointchange)
+            surfacejoint = this.gameObject.GetComponents<ConfigurableJoint>();
+            if (jointchange != null || surfacejoint != null)
             {
                 if (Mathf.Infinity == jointchange.breakForce)
                 {
@@ -294,11 +315,18 @@ namespace TBCStusSpace
                         jointchange.breakForce = jointvalue / changevalue * 1.25f;
                         jointchange.breakTorque = jointvalue / changevalue * 1.25f;
                     }
+                    else if(SurfaceVisualController)
+                    {
+                        for(int i =0; i < surfacejoint.Length; i++)
+                        {
+                            surfacejoint[i].breakForce = 60000f / changevalue;
+                            surfacejoint[i].breakTorque = 60000f / changevalue;
+                        }
+                    }
                     else
                     {
                         jointchange.breakForce = jointvalue / changevalue;
                         jointchange.breakTorque = jointvalue / changevalue;
-
                     }
                 }
             }
@@ -306,6 +334,10 @@ namespace TBCStusSpace
             {
                 hingejointchange.breakForce = hingejointvalue / changevalue;
                 hingejointchange.breakTorque = hingejointvalue / changevalue;
+            }
+            if (SurfaceVisualController)
+            {
+                SurfaceVisualController.breakIntoPieces = false;
             }
         }
         IEnumerator SetSubArmor()
@@ -329,7 +361,6 @@ namespace TBCStusSpace
                 subarmorthickness = 0f;
             }
         }
-
     }
 
 }
