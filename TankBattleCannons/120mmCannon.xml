@@ -32,8 +32,8 @@
 			<AmmoFunction>7</AmmoFunction>
 		</TBCAddProjectile>
 		<TBCAddHEModule modid="31f66636-e241-4406-9beb-5c7de2c4cc7f">
-			<HEForce>350</HEForce>
-			<HERadius>4</HERadius>
+			<HEPenetration>50</HEPenetration>
+			<HERadius>5</HERadius>
 		</TBCAddHEModule>
 
 		<AdBlockProp modid="a4577151-2173-4084-a456-4b29e8d3e01f">
@@ -49,7 +49,15 @@
 				<FrictionCombineType>Average</FrictionCombineType>
 
 				<BounceCombineType>Multiply</BounceCombineType>
-
+				<Colliders>
+					<BoxCollider>
+						<Position x="0.0" y="-0.2" z="0.562"/>
+						<Rotation x="0.0" y="0.0" z="0.0" />
+						<Scale x="0.75" y="1.4" z="0.75" />
+						<ColliderCenter x="0.0" y="0.0" z="0.0" />
+						<SetLayer>12</SetLayer>
+					</BoxCollider>
+				</Colliders>
 			</BlockState>
 			<SpringState>
 
@@ -93,15 +101,15 @@
 				<Mesh name="CannonShell">
 					<Position x="0.0" y="0.0" z="-0.1" />
 					<Rotation x="90.0" y="0.0" z="0.0" />
-					<Scale x="0.5" y="0.5" z="0.5" />
+					<Scale x="0.4" y="0.4" z="0.4" />
 				</Mesh>
 
-				<Texture name="Grey" />
+				<Texture name="BulletT" />
 
 
 				<Mass>1.0</Mass>
 				<Drag>0.1</Drag>
-				<AngularDrag>3000.0</AngularDrag>
+				<AngularDrag>0.0</AngularDrag>
 				<IgnoreGravity>False</IgnoreGravity>
 				<EntityDamage>10</EntityDamage>
 				<BlockDamage>4</BlockDamage>
@@ -121,7 +129,7 @@
 			<HoldToShootToggle key="hold-to-shoot" />
 
 			<ProjectileStart>
-				<Position x="0.0" y="-2.5" z="0.562" />
+				<Position x="0.0" y="-11.5" z="0.562" />
 				<Rotation x="90.0" y="0.0" z="0.0" />
 				<Scale x="1.0" y="1.0" z="1.0" />
 			</ProjectileStart>
@@ -138,7 +146,7 @@
 			<AmmoType>Arrow</AmmoType>
 			<ProjectilesExplode>true</ProjectilesExplode>
 			<useExplodeRotation>true</useExplodeRotation>
-			<ExplodeRadius>5.0</ExplodeRadius>
+			<ExplodeRadius>1.25</ExplodeRadius>
 			<ExplodePower>1750.0</ExplodePower>
 			<ExplodeUpPower>0.0</ExplodeUpPower>
 
@@ -161,7 +169,7 @@
 			<useDelay>true</useDelay>
 			<DelayTime>0.0</DelayTime>
 
-			<PoolSize>50</PoolSize>
+			<PoolSize>20</PoolSize>
 
 			<useMagazine>false</useMagazine>
 			<MagazineInfo>
@@ -194,9 +202,9 @@
 
 	<Colliders>
 		<CapsuleCollider>
-			<Position x="0.0" y="-0.2" z="0.562" />
+			<Position x="0.0" y="-5.25" z="0.562" />
 			<Rotation x="-90.0" y="0.0" z="0.0" />
-			<Capsule direction="Z" radius="0.35" height="2.2" />
+			<Capsule direction="Z" radius="0.35" height="9.5" />
 		</CapsuleCollider>
 	</Colliders>
 

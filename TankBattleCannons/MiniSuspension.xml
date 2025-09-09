@@ -1,0 +1,141 @@
+<Block>
+
+	<Debug>false</Debug>
+	
+	<ID>26</ID>
+	
+	<Name>MiniSuspension</Name>
+	
+	<Mass>3.0</Mass>
+	<ModuleMapperTypes>
+		<Slider displayName="Spring" key="spring_str" min="0" max="40" default="40" unclamped="false"/>
+		<Slider displayName="Damper" key="damper_str" min="0" max="3" default="0.5" unclamped="false"/>
+	</ModuleMapperTypes>
+	<Script></Script>
+	<Health>1</Health>
+	<Modules>
+		<AdBlockProp modid="a4577151-2173-4084-a456-4b29e8d3e01f">
+		<BlockState>
+				<JointStr>15000</JointStr>
+				<!-- Deault = 0.6, 0 to 1 -->
+				<FrictionStr>0.9</FrictionStr>
+				<!-- Deault = 0, 0 to 1 -->
+				<BounceStr>0</BounceStr>
+				<!-- Deault = Discrete, select from Discrete, Continuous, ContinuousDynamic -->
+				<CollisionType>Discrete</CollisionType>
+				<!-- Deault = Average, select from Average, Maximum, Minimum, Mutiply -->
+				<FrictionCombineType>Average</FrictionCombineType>
+				<!-- Deault = Average, select from Average, Maximum, Minimum, Mutiply -->
+				<BounceCombineType>Multiply</BounceCombineType>
+			<Colliders>
+				<BoxCollider>
+					<Position x="0.0" y="0.0" z="0.8"/>
+					<Rotation x="0.0" y="0.0" z="0.0" />
+					<Scale x="0.2" y="0.2" z="0.4" />
+					<ColliderCenter x="0.0" y="0.0" z="0.0" />
+					<SetLayer>12</SetLayer>
+				</BoxCollider>
+			</Colliders>
+				<useSubObject>true</useSubObject>
+				
+				<SubMesh name="MiniSuspensionDownM"> 
+					<Position x="0.0" y="0.0" z="0.0" />
+					<Rotation x="90.0" y="0.0" z="0.0" />
+					<Scale x="1.0" y="1.0" z="1.0" />
+				</SubMesh>
+				
+				<SubTexture name="Grey" />
+				
+				
+				<SubObjectPosition>
+					<Position x="0.0" y="0.0" z="0.0" />
+					<Rotation x="0.0" y="0.0" z="0.0" />
+					<Scale x="1.0" y="1.0" z="1.0" />
+				</SubObjectPosition>
+		</BlockState>
+		<SpringState>
+			<!-- Deault = Locked, select from Locked, Limited, Free -->
+			<MotionX>Locked</MotionX>
+			<MotionY>Limited</MotionY>
+			<MotionZ>Locked</MotionZ>
+			<!-- Deault = 0 -->
+			<SpringStr>2000000</SpringStr>
+			<!-- Deault = 0 -->
+			<DamperStr>1000</DamperStr>
+			<!-- Deault = 0.if set 0,become infinity  -->
+			<LimitSpringStr>3.4E30</LimitSpringStr>
+			<!-- Deault = 0  -->
+			<LimitDamperStr>3.4E30</LimitDamperStr>
+			<!-- Deault = 0 -->
+			<LimitDistance>0.4</LimitDistance>
+ 
+			<useSlider>true</useSlider>
+				<SpringSlider key="spring_str" />
+				<DamperSlider key="damper_str" />
+ 
+		</SpringState>
+		<RotateState>
+			<!-- Deault = Locked, select from Locked, Limited, Free -->
+			<AngularMotionX>Locked</AngularMotionX>
+			<AngularMotionY>Locked</AngularMotionY>
+			<AngularMotionZ>Locked</AngularMotionZ>
+			<!-- Deault = 0 -->
+			<SpringStr>0</SpringStr>
+			<!-- Deault = 0 -->
+			<DamperStr>0</DamperStr>
+			<!-- Deault = 0 -->
+			<LimitAngular>0</LimitAngular>
+			<!-- Deault = 0 -->
+			<LimitDamperStr>300</LimitDamperStr>
+			<!-- Deault = 0 -->
+			<LimitAngular>0</LimitAngular>
+		</RotateState>
+		</AdBlockProp>
+	</Modules>
+	<Mesh name="MiniSuspensionUPM">
+		<Position x="0.0" y="0.0" z="0.4" />
+		<Rotation x="90.0" y="0.0" z="0.0" />
+		<Scale x="1.0" y="1.0" z="1.0" />
+	</Mesh>
+
+	<Texture name="Grey" />
+
+	<Icon>
+		<Position x="0.0" y="0.0" z="0.0" />
+		<Rotation x="-10.0" y="30.0"  z="0.0" />
+		<Scale x="1.0" y="1.0" z="1.0" />
+	</Icon>
+	<ExtraIconObjects>
+		<Object>
+			<Mesh name="MiniSuspensionDownM">
+				<Position x="0.0" y="0.0" z="0.0" />
+				<Rotation x="0.0" y="0.0" z="0.0" />
+				<Scale x="1.0" y="1.0" z="1.0" />
+			</Mesh>
+			<Texture name="Grey" />
+		</Object>
+	</ExtraIconObjects>
+
+
+	<Colliders>
+		<BoxCollider>
+			<Position x="0.0" y="0.0" z="0.5" />
+			<Rotation x="0.0" y="0.0" z="0.0" />
+			<Scale x="0.2" y="0.2" z="0.2" />
+		</BoxCollider>
+	</Colliders>
+
+	<BasePoint hasAddingPoint="false" breakForce="15000">
+		<Stickiness enabled="true" radius="0.20" />
+		<Motion x="false" y="false" z="false" />
+	</BasePoint>
+
+	<AddingPoints>
+		<!-- TODO: Insert AddingPoint definitions here. Example:-->
+		<AddingPoint>
+			<Position x="0.0" y="0.0" z="1.2" />
+			<Rotation x="0.0" y="0.0" z="180.0" />
+			<Stickiness enabled="true" radius="0.35"/>
+		</AddingPoint>
+	</AddingPoints>
+</Block>

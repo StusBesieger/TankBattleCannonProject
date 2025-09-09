@@ -1,20 +1,20 @@
 <Block>
 
-	<Debug>true</Debug>
+	<Debug>false</Debug>
 	
-	<ID>23</ID>
+	<ID>21</ID>
 	
-	<Name>RangeFinder</Name>
+	<Name>SpotCamera</Name>
 	
 	<Mass>2</Mass>
 	<ModuleMapperTypes>
-		<Key displayName="RangeFindKey" key="RangeFindKey" default="X" />
+		<Key displayName="Spot" key="spot" default="V" />
 	</ModuleMapperTypes>
 	<Modules>
-		<TBCAddRangeFinderModule modid="31f66636-e241-4406-9beb-5c7de2c4cc7f">
-			<RangeFindKey key="RangeFindKey" />
-			<FindRange>2000.0</FindRange>
-		</TBCAddRangeFinderModule>
+		<TBCAddSpotModule modid="31f66636-e241-4406-9beb-5c7de2c4cc7f">
+			<SpotKey key="spot" />
+			<SpotRange>100.0</SpotRange>
+		</TBCAddSpotModule>
 		<AdBlockProp modid="a4577151-2173-4084-a456-4b29e8d3e01f">
 			<BlockState>
 				<JointStr>300000</JointStr>
@@ -59,9 +59,9 @@
 
 	</Modules>
 
-	<Mesh name="RangeFinderM">
-		<Position x="0.0" y="0.0" z="0.0" />
-		<Rotation x="90" y="0.0" z="0" />
+	<Mesh name="SpotCameraM">
+		<Position x="0.0" y="0.5" z="0.562" />
+		<Rotation x="180" y="0.0" z="0" />
 		<Scale x="1.0" y="1.0" z="1.0" />
 	</Mesh>
 
@@ -77,9 +77,9 @@
 
 	<Colliders>
 		<BoxCollider>
-			<Position x="0.0" y="0.0" z="0.0" />
+			<Position x="0.0" y="0.0" z="0.55" />
 			<Rotation x="0.0" y="0.0" z="0.0" />
-			<Scale x="0.4" y="0.4" z="0.4" />
+			<Scale x="1.0" y="1.0" z="1.0" />
 		</BoxCollider>
 	</Colliders>
 

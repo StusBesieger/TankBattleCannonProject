@@ -12,8 +12,44 @@
 	<Script>TBCStusSpace.AdAmmunitionStorage</Script>
 	<Health>1</Health>
 	<Modules>
-	</Modules>
+		<AdBlockProp modid="a4577151-2173-4084-a456-4b29e8d3e01f">
+		<BlockState>
+				<InterferenceCollision>true</InterferenceCollision>
+ 				<!-- Deault = false, select true -->
+			</BlockState>
+			<SpringState>
 
+				<MotionX>Locked</MotionX>
+				<MotionY>Locked</MotionY>
+				<MotionZ>Locked</MotionZ>
+
+				<SpringStr>0</SpringStr>
+
+				<DamperStr>0</DamperStr>
+
+				<LimitDistance>0</LimitDistance>
+
+			</SpringState>
+			<RotateState>
+
+				<AngularMotionX>Locked</AngularMotionX>
+				<AngularMotionY>Locked</AngularMotionY>
+				<AngularMotionZ>Locked</AngularMotionZ>
+
+				<SpringStr>0</SpringStr>
+
+				<DamperStr>0</DamperStr>
+
+				<LimitAngular>0</LimitAngular>
+			</RotateState>
+		</AdBlockProp>
+	</Modules>
+	<FireInteraction burnDuration="5">
+        <SphereTrigger>
+            <Position x="0" y="0" z="0.5" />
+            <Radius>2.5</Radius>
+        </SphereTrigger>
+    </FireInteraction>
 	<Mesh name="AmmoStrageM">
 		<Position x="0.0" y="0.0" z="0.0" />
 		<Rotation x="90.0" y="0.0" z="0.0" />
@@ -32,9 +68,9 @@
 
 	<Colliders>
 		<BoxCollider>
-			<Position x="0.0" y="0.0" z="0.355" />
+			<Position x="0.0" y="0.0" z="0.51" />
 			<Rotation x="0.0" y="0.0" z="0.0" />
-			<Scale x="0.5" y="0.5" z="0.7" />
+			<Scale x="0.7" y="1.0" z="1.0" />
 		</BoxCollider>
 	</Colliders>
 

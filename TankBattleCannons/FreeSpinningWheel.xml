@@ -1,0 +1,224 @@
+<Block>
+
+	<Debug>false</Debug>
+	
+	<ID>27</ID>
+	
+	<Name>FreeSpinningWheel</Name>
+	
+	<Mass>1.5</Mass>
+	<ModuleMapperTypes>
+	</ModuleMapperTypes>
+	<Script></Script>
+	<Health>1</Health>
+	<Modules>
+		<AdBlockProp modid="a4577151-2173-4084-a456-4b29e8d3e01f">
+		<BlockState>
+				<JointStr>15000</JointStr>
+				<!-- Deault = 0.6, 0 to 1 -->
+				<FrictionStr>0.9</FrictionStr>
+				<!-- Deault = 0, 0 to 1 -->
+				<BounceStr>0</BounceStr>
+				<!-- Deault = Discrete, select from Discrete, Continuous, ContinuousDynamic -->
+				<CollisionType>Discrete</CollisionType>
+				<!-- Deault = Average, select from Average, Maximum, Minimum, Mutiply -->
+				<FrictionCombineType>Average</FrictionCombineType>
+				<!-- Deault = Average, select from Average, Maximum, Minimum, Mutiply -->
+				<BounceCombineType>Multiply</BounceCombineType>
+		</BlockState>
+		<SpringState>
+		</SpringState>
+		<RotateState>
+			<!-- Deault = Locked, select from Locked, Limited, Free -->
+			<AngularMotionX>Locked</AngularMotionX>
+			<AngularMotionY>Free</AngularMotionY>
+			<AngularMotionZ>Locked</AngularMotionZ>
+			<!-- Deault = 0 -->
+			<SpringStr>0</SpringStr>
+			<!-- Deault = 0 -->
+			<DamperStr>0</DamperStr>
+			<!-- Deault = 0 -->
+			<LimitAngular>0</LimitAngular>
+			<!-- Deault = 0 -->
+			<LimitDamperStr>300</LimitDamperStr>
+			<!-- Deault = 0 -->
+			<LimitAngular>0</LimitAngular>
+		</RotateState>
+	</AdBlockProp>
+	</Modules>
+	<Mesh name="MiniSuspensionUPM">
+		<Position x="0.0" y="0.0" z="0.4" />
+		<Rotation x="90.0" y="0.0" z="0.0" />
+		<Scale x="1.0" y="1.0" z="1.0" />
+	</Mesh>
+
+	<Texture name="Grey" />
+
+	<Icon>
+		<Position x="0.0" y="0.0" z="0.0" />
+		<Rotation x="-10.0" y="30.0"  z="0.0" />
+		<Scale x="1.0" y="1.0" z="1.0" />
+	</Icon>
+
+
+	<Colliders>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="0" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="12" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="24" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="36" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="48" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="60" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="72" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="84" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="96" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="108" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="120" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="132" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="144" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="156" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.25" />
+    		<Rotation x="0" y="0" z="168" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+
+		<!-- UP -->
+
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="0" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="12" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="24" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="36" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="48" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="60" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="72" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="84" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="96" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="108" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="120" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="132" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="144" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="156" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="1.6" />
+    		<Rotation x="0" y="0" z="168" />
+    		<Capsule direction="X" radius="0.15" height="1.35" />
+		</CapsuleCollider>
+	</Colliders>
+
+	<BasePoint hasAddingPoint="false" breakForce="15000">
+		<Stickiness enabled="true" radius="0.20" />
+		<Motion x="false" y="false" z="false" />
+	</BasePoint>
+</Block>

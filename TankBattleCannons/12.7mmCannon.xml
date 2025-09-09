@@ -2,21 +2,21 @@
 
 	<Debug>false</Debug>
 	
-	<ID>9</ID>
+	<ID>12</ID>
 	
-	<Name>30mmL22A1</Name>
+	<Name>12.7mmM2HB</Name>
 	
-	<Mass>2</Mass>
+	<Mass>1</Mass>
 	<ModuleMapperTypes>
 		<Key displayName="Shot" key="fire" default="C" />
 		<Key displayName="Reload" key="reload" default="R" />
 		<Toggle displayName="Display Ammo Count" key="use-ammo-ui" default="false" />
 		<Slider displayName="Offset UI" key="offset-ui" min="0" max="10" default="0" unclamped="true"/>
-		<Slider displayName="Power" key="power" min="360" max="360" default="360" unclamped="false"/>
-		<Slider displayName="Rate Of Fire" key="rate-of-fire" min="2.5" max="2.5" default="2.5" unclamped="false"/>
+		<Slider displayName="Power" key="power" min="450" max="450" default="450" unclamped="false"/>
+		<Slider displayName="Rate Of Fire" key="rate-of-fire" min="8" max="8" default="8" unclamped="false"/>
 		<Slider displayName="Fuse Timer" key="fuse-timer" min="0" max="7.0" default="7.0" unclamped="false"/>
-		<Slider displayName="Magazine Capacity" key="capacity" min="3.0" max="3.0" default="3.0" unclamped="false"/>
-		<Slider displayName="Reload Time" key="reload-time" min="2" max="2" default="2" unclamped="false"/>
+		<Slider displayName="Magazine Capacity" key="capacity" min="20" max="20" default="20" unclamped="false"/>
+		<Slider displayName="Reload Time" key="reload-time" min="4" max="4" default="4" unclamped="false"/>
 		<Toggle displayName="Hold To Shoot" key="hold-to-shoot" default="true" />
 		<Toggle displayName="Auto Reload" key="auto-reload" default="true" />
 
@@ -28,19 +28,19 @@
 			<RateOfFireSlider key="rate-of-fire" />
 			<ReloadTimeSlider key="reload-time" />
 			<useMagazine>true</useMagazine>
-			<Icon name="30Icon" />
+			<Icon name="12.7Icon" />
 		</TBCAmmoUIModule>
 		<TBCAddProjectile modid="31f66636-e241-4406-9beb-5c7de2c4cc7f">
 			<Gravity>0.0</Gravity>
-			<AmmoFunction>1</AmmoFunction>
+			<AmmoFunction>0.25</AmmoFunction>
 			<UseMagazine>true</UseMagazine>
-			<MagazineCapacity>3</MagazineCapacity>
+			<MagazineCapacity>20</MagazineCapacity>
 		</TBCAddProjectile>
 		<TBCAddAPModule modid="31f66636-e241-4406-9beb-5c7de2c4cc7f">
-			<APSpeed>360</APSpeed>
+			<APSpeed>450</APSpeed>
 			<APtime>2.5</APtime>
 			<APcoefficient>1</APcoefficient>
-			<StandardPenetration>55</StandardPenetration>
+			<StandardPenetration>25</StandardPenetration>
 		</TBCAddAPModule>
 		<AdBlockProp modid="a4577151-2173-4084-a456-4b29e8d3e01f">
 			<BlockState>
@@ -57,9 +57,9 @@
 				<BounceCombineType>Multiply</BounceCombineType>
 				<Colliders>
 					<BoxCollider>
-						<Position x="0.0" y="0.0" z="0.562"/>
+						<Position x="0.0" y="0.0" z="0.262"/>
 						<Rotation x="0.0" y="0.0" z="0.0" />
-						<Scale x="0.5" y="1.0" z="0.5" />
+						<Scale x="0.25" y="1.0" z="0.25" />
 						<ColliderCenter x="0.0" y="0.0" z="0.0" />
 						<SetLayer>12</SetLayer>
 					</BoxCollider>
@@ -104,18 +104,17 @@
 					</CapsuleCollider>
 				</Colliders>
 
-
 				<Mesh name="CannonShell">
 					<Position x="0.0" y="0.0" z="-0.1" />
 					<Rotation x="90.0" y="0.0" z="0.0" />
-					<Scale x="0.1" y="0.1" z="0.1" />
+					<Scale x="0.05" y="0.05" z="0.05" />
 				</Mesh>
 
 				<Texture name="BulletT" />
 
 
 				<Mass>1.0</Mass>
-				<Drag>0.1</Drag>
+				<Drag>0.01</Drag>
 				<AngularDrag>0.0</AngularDrag>
 				<IgnoreGravity>False</IgnoreGravity>
 				<EntityDamage>10</EntityDamage>
@@ -136,13 +135,13 @@
 			<HoldToShootToggle key="hold-to-shoot" />
 
 			<ProjectileStart>
-				<Position x="0.0" y="-6.0" z="0.562" />
+				<Position x="0.0" y="-2.5" z="0.277" />
 				<Rotation x="90.0" y="0.0" z="0.0" />
 				<Scale x="1.0" y="1.0" z="1.0" />
 			</ProjectileStart>
 
 			<ShotFlashPosition>
-				<Position x="0.0" y="-5.0" z="0.562" />
+				<Position x="0.0" y="-2.5" z="0.277" />
 				<Rotation x="90.0" y="0.0" z="0.0" />
 				<Scale x="0.4" y="0.4" z="0.4" />
 			</ShotFlashPosition>
@@ -153,8 +152,8 @@
 			<AmmoType>Arrow</AmmoType>
 			<ProjectilesExplode>true</ProjectilesExplode>
 			<useExplodeRotation>true</useExplodeRotation>
-			<ExplodeRadius>1.0</ExplodeRadius>
-			<ExplodePower>1000.0</ExplodePower>
+			<ExplodeRadius>0.75</ExplodeRadius>
+			<ExplodePower>500.0</ExplodePower>
 			<ExplodeUpPower>0.0</ExplodeUpPower>
 
 			<SupportsExplosionGodTool>False</SupportsExplosionGodTool>
@@ -162,7 +161,7 @@
 
 			<AssetBundleName name="myasset" />
 			<ExplodeEffect>explosion</ExplodeEffect>
-			<ShotFlashEffect>Cannon</ShotFlashEffect>
+			<ShotFlashEffect>GunShot</ShotFlashEffect>
 			<TrailEffect>shellTrail</TrailEffect>
 
 			<useTimefuse>true</useTimefuse>
@@ -170,7 +169,7 @@
 			<RandomFuseInterval>0.0</RandomFuseInterval>
 			<FuseDelayTime>0.0</FuseDelayTime>
 
-			<RecoilMultiplier>0.25</RecoilMultiplier>
+			<RecoilMultiplier>0.05</RecoilMultiplier>
 			<RandomInterval>0.0</RandomInterval>
 			<RandomDiffusion>0.00</RandomDiffusion>
 			<useDelay>true</useDelay>
@@ -195,7 +194,7 @@
 			</MagazineInfo>
 
 			<Sounds>
-				<AudioClip name="Shot8" />
+				<AudioClip name="Gunshot1" />
 			</Sounds>
 			<HitSounds>
 				<AudioClip name="APHit" />
@@ -203,10 +202,10 @@
 		</AdShootingProp>
 	</Modules>
 
-	<Mesh name="30mmC">
-		<Position x="0.0" y="0.5" z="0.562" />
+	<Mesh name="12.7mmC">
+		<Position x="0.0" y="0.5" z="0.262" />
 		<Rotation x="180" y="90.0" z="0" />
-		<Scale x="0.6" y="1.0" z="0.6" />
+		<Scale x="0.5" y="1.0" z="0.5" />
 	</Mesh>
 
 	<Texture name="Grey" />
@@ -221,9 +220,9 @@
 
 	<Colliders>
 		<CapsuleCollider>
-			<Position x="0.0" y="-2.25" z="0.562" />
+			<Position x="0.0" y="-1.25" z="0.262" />
 			<Rotation x="-90.0" y="0.0" z="0.0" />
-			<Capsule direction="Z" radius="0.1" height="3.5" />
+			<Capsule direction="Z" radius="0.075" height="2.0" />
 		</CapsuleCollider>
 	</Colliders>
 

@@ -1,23 +1,19 @@
 <Block>
 
-	<Debug>true</Debug>
+	<Debug>false</Debug>
 	
-	<ID>23</ID>
+	<ID>28</ID>
 	
-	<Name>RangeFinder</Name>
+	<Name>ChargeBlock</Name>
 	
-	<Mass>2</Mass>
+	<Mass>1</Mass>
+		<Script>TBCStusSpace.AdChargeBehaviour</Script>
 	<ModuleMapperTypes>
-		<Key displayName="RangeFindKey" key="RangeFindKey" default="X" />
 	</ModuleMapperTypes>
 	<Modules>
-		<TBCAddRangeFinderModule modid="31f66636-e241-4406-9beb-5c7de2c4cc7f">
-			<RangeFindKey key="RangeFindKey" />
-			<FindRange>2000.0</FindRange>
-		</TBCAddRangeFinderModule>
 		<AdBlockProp modid="a4577151-2173-4084-a456-4b29e8d3e01f">
 			<BlockState>
-				<JointStr>300000</JointStr>
+				<JointStr>00</JointStr>
 
 				<FrictionStr>0.6</FrictionStr>
 
@@ -59,32 +55,32 @@
 
 	</Modules>
 
-	<Mesh name="RangeFinderM">
-		<Position x="0.0" y="0.0" z="0.0" />
-		<Rotation x="90" y="0.0" z="0" />
+	<Mesh name="ChargeBlockM">
+		<Position x="0.0" y="0" z="0" />
+		<Rotation x="90.0" y="0.0" z="0" />
 		<Scale x="1.0" y="1.0" z="1.0" />
 	</Mesh>
 
-	<Texture name="CameraT" />
+	<Texture name="ChargeBlockT" />
 
 	<Icon>
 		<Position x="0.0" y="0.0" z="0.0" />
 		<Rotation x="-10.0" y="30.0"  z="0.0" />
-		<Scale x="0.3" y="0.3" z="0.3" />
+		<Scale x="0.5" y="0.5" z="0.5" />
 	</Icon>
 
 
 
 	<Colliders>
-		<BoxCollider>
-			<Position x="0.0" y="0.0" z="0.0" />
-			<Rotation x="0.0" y="0.0" z="0.0" />
-			<Scale x="0.4" y="0.4" z="0.4" />
-		</BoxCollider>
+		<CapsuleCollider>
+			<Position x="0.0" y="0.0" z="0.5" />
+			<Rotation x="00.0" y="0.0" z="0.0" />
+			<Capsule direction="Z" radius="0.125" height="1.0" />
+		</CapsuleCollider>
 	</Colliders>
 
-	<BasePoint hasAddingPoint="false" breakForce="560000">
-		<Stickiness enabled="true" radius="0.35" />
+	<BasePoint hasAddingPoint="false" breakForce="0">
+		<Stickiness enabled="true" radius="0.0" />
 		<Motion x="false" y="false" z="false" />
 	</BasePoint>
 

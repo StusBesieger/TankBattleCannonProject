@@ -2,11 +2,11 @@
 	
 	<Name>TankBattleCannons</Name>
 	<Author>stus</Author> 
-	<Version>2.5.17</Version>
+	<Version>2.12.37</Version>
 	<LoadOrder>1</LoadOrder>
 	
 	<Description>
-version 2.7.19
+version 2.10.37
 	</Description>
     <Icon name="icon"/> 
 	<Debug>false</Debug>
@@ -23,14 +23,18 @@ version 2.7.19
 		<!-- ドイツ-->
 		<Block path="75mmCannon.xml" /><!-- 75mmKwK 42L70--><!-- APHE--><!-- ID 6-->
 		<Block path="88mmCannon.xml" /><!-- 88mmKwK 36L/56--><!-- APHE--><!-- ID 3-->
+		<Block path="128mmCannon.xml" /><!-- 88mmKwK 36L/56--><!-- APHE--><!-- ID 11-->
 		<!-- アメリカ-->
 		<Block path="76mmCannon.xml" /><!-- 76mm M1--><!-- APHE--><!-- ID 8-->
 		<Block path="90mmCannon.xml" /><!-- 90mm M3--><!-- APHE--><!-- ID 4-->
+		<Block path="12.7mmCannon.xml" /><!-- 12.7mm M2HB--><!-- APHE--><!-- ID 12-->
 		<!-- 日本-->
 		<Block path="120mmCannon.xml" /><!-- 12cm高角砲--><!--HE--><!-- ID 1-->
 		<Block path="47mmCannon.xml" /><!-- 47mm戦車砲--><!-- APHE--><!-- ID 2-->
 		<!-- イギリス-->
+		<Block path="QF17pounder.xml"/><!-- QF 17-pounder --><!-- APHE--><!-- ID 10-->
 		<Block path="30mmCannon.xml" /><!-- 30mmL22A1--><!-- APHE--><!-- ID 9-->
+		
 
 		<!-- 非武装ブロック-->
 		<Block path="SpotCamera.xml" /><!-- ID 21-->
@@ -38,6 +42,9 @@ version 2.7.19
 		<Block path="FireExtinguisher.xml" /><!-- ID 24-->
 		<Block path="AmmoStrage.xml" /><!-- ID 22-->
 		<Block path="EnhancedAmmunitionDepot.xml" /><!-- ID 25-->
+		<Block path="MiniSuspension.xml" /><!-- ID 26-->
+		<!--<Block path="FreeSpinningWheel.xml" />--> <!-- ID 27-->
+		<Block path="ChargeBlock.xml" /><!-- ID 28-->
 
 	</Blocks>
 	
@@ -56,20 +63,29 @@ version 2.7.19
 		<!--<Mesh name="DragBlock" path="object/Block.obj"/>-->
 		<Mesh name="47mmC" path="object/47mmC.obj"/>
 		<Mesh name="88mmC" path="object/88mmC.obj"/>
+		<Mesh name="128mmC" path="object/128mmC.obj"/>
 		<Mesh name="30mmC" path="object/30mmC.obj"/>
+		<Mesh name="17pounder" path="object/17pounder.obj"/>
+		<Mesh name="12.7mmC" path="object/12.7mmC.obj"/>
 
 		<Mesh name="RangeFinderM" path="object/RangeFinder.obj" />
 		<Mesh name="SpotCameraM" path="object/SpotCamera.obj" />
 		<Mesh name="AmmoStrageM" path="object/AmmoStrage.obj" />
 		<Mesh name="FireExtinguisherM" path="object/FireExtinguisher.obj" />
 		<Mesh name="EnhancedAmmunitionDepotM" path="object/EnhancedAmmunitionDepot.obj" />
+		<Mesh name="MiniSuspensionUPM" path="object/MiniSuspensionUPM.obj" />
+		<Mesh name="MiniSuspensionDownM" path="object/MiniSuspensionDownM.obj" />
+		<Mesh name="ChargeBlockM" path="object/ChargeBlock.obj" />
 
 		<Texture name="Grey" path="png/Grey.png"/>
+		<Texture name="BulletT" path="png/bullet.png"/>
 		<Texture name="CameraT" path="png/Camera.png"/>
 		<Texture name="StrageT" path="png/Strage.png"/>
 		<Texture name="FireExtinguisherT" path="png/FireExtinguisher.png"/>
 		<Texture name="EnhancedAmmunitionDepotT" path="png/EnhancedAmmunitionDepot.png"/>
+		<Texture name="ChargeBlockT" path="png/ChargeBlock.png"/>
 
+		<AudioClip name="Gunshot1" path="sound/Gunshot1.wav" />
 		<AudioClip name="Shot1" path="sound/shot1.wav" />
 		<AudioClip name="Shot2" path="sound/shot2.wav" />
 		<AudioClip name="Shot3" path="sound/shot3.wav" />
@@ -81,6 +97,10 @@ version 2.7.19
 		<AudioClip name="APHit" path="sound/APHit.wav" />
 		<AudioClip name="HEHit" path="sound/HEHit.wav" />
 		<AudioClip name="FireEx" path="sound/FireEx.wav" />
+		<AudioClip name="explodeAmmo" path="sound/explodeAmmo.wav" />
+
+		<AudioClip name="ReloadSound" path="sound/ReloadSound.wav" />
+		<AudioClip name="ChargingSound" path="sound/ChargingSound.wav" />
 
 		<AudioClip name="Ricochet_1" path="sound/Ricochet_1.wav" />
 		<AudioClip name="Ricochet_2" path="sound/Ricochet_2.wav" />
@@ -88,15 +108,18 @@ version 2.7.19
 
 		<AudioClip name="non" path="sound/non.wav" />
 
+		<Texture name="12.7Icon" path="cannonIcon/12.7.png"/>
 		<Texture name="152Icon" path="cannonIcon/152.png"/>
 		<Texture name="122Icon" path="cannonIcon/122.png"/>
 		<Texture name="88Icon" path="cannonIcon/88.png"/>
+		<Texture name="128Icon" path="cannonIcon/128.png"/>
 		<Texture name="75Icon" path="cannonIcon/75.png"/>
 		<Texture name="90Icon" path="cannonIcon/90.png"/>
 		<Texture name="76Icon" path="cannonIcon/76.png"/>
 		<Texture name="120Icon" path="cannonIcon/120.png"/>
 		<Texture name="47Icon" path="cannonIcon/47.png"/>
 		<Texture name="30Icon" path="cannonIcon/30.png"/>
+		<Texture name="17pIcon" path="cannonIcon/17p.png"/>
 
 		<AssetBundle name="myasset" path="effects/tankbattle" />
 		<AssetBundle name="myassetMac" path="effectsmac/tankbattlemac" />

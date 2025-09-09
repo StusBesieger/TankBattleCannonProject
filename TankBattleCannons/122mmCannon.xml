@@ -20,6 +20,10 @@
 
 	</ModuleMapperTypes>
 	<Modules>
+		<TBCAdCanUseChargeModule modid="31f66636-e241-4406-9beb-5c7de2c4cc7f">
+			<UseChargeBlock>true</UseChargeBlock>
+			<Chargetype>1</Chargetype>
+		</TBCAdCanUseChargeModule>
 		<TBCAmmoUIModule modid="31f66636-e241-4406-9beb-5c7de2c4cc7f">
 			<UseAmmoUIToggle key="use-ammo-ui" />
 			<OffsetUISlider key="offset-ui" />
@@ -32,6 +36,7 @@
 			<AmmoFunction>7</AmmoFunction>
 		</TBCAddProjectile>
 		<TBCAddAPModule modid="31f66636-e241-4406-9beb-5c7de2c4cc7f">
+			<APSpeed>600</APSpeed>
 			<APtime>4.0</APtime>
 			<APcoefficient>3</APcoefficient>
 			<StandardPenetration>205</StandardPenetration>
@@ -51,6 +56,15 @@
 
 				<BounceCombineType>Multiply</BounceCombineType>
 
+				<Colliders>
+					<BoxCollider>
+						<Position x="0.0" y="-0.2" z="0.562"/>
+						<Rotation x="0.0" y="0.0" z="0.0" />
+						<Scale x="0.75" y="1.4" z="0.75" />
+						<ColliderCenter x="0.0" y="0.0" z="0.0" />
+						<SetLayer>12</SetLayer>
+					</BoxCollider>
+				</Colliders>
 			</BlockState>
 			<SpringState>
 
@@ -94,15 +108,15 @@
 				<Mesh name="CannonShell">
 					<Position x="0.0" y="0.0" z="-0.1" />
 					<Rotation x="90.0" y="0.0" z="0.0" />
-					<Scale x="0.5" y="0.5" z="0.5" />
+					<Scale x="0.4" y="0.4" z="0.4" />
 				</Mesh>
 
-				<Texture name="Grey" />
+				<Texture name="BulletT" />
 
 
 				<Mass>1.0</Mass>
 				<Drag>0.1</Drag>
-				<AngularDrag>1500.0</AngularDrag>
+				<AngularDrag>0.0</AngularDrag>
 				<IgnoreGravity>False</IgnoreGravity>
 				<EntityDamage>10</EntityDamage>
 				<BlockDamage>4</BlockDamage>
@@ -123,7 +137,7 @@
 			<HoldToShootToggle key="hold-to-shoot" />
 
 			<ProjectileStart>
-				<Position x="0.0" y="-2.5" z="0.562" />
+				<Position x="0.0" y="-10.0" z="0.562" />
 				<Rotation x="90.0" y="0.0" z="0.0" />
 				<Scale x="1.0" y="1.0" z="1.0" />
 			</ProjectileStart>
@@ -163,7 +177,7 @@
 			<useDelay>true</useDelay>
 			<DelayTime>0.0</DelayTime>
 
-			<PoolSize>50</PoolSize>
+			<PoolSize>20</PoolSize>
 
 			<useMagazine>false</useMagazine>
 			<MagazineInfo>
@@ -196,9 +210,9 @@
 
 	<Colliders>
 		<CapsuleCollider>
-			<Position x="0.0" y="-0.2" z="0.562" />
+			<Position x="0.0" y="-4.75" z="0.562" />
 			<Rotation x="-90.0" y="0.0" z="0.0" />
-			<Capsule direction="Z" radius="0.35" height="2.2" />
+			<Capsule direction="Z" radius="0.35" height="8.5" />
 		</CapsuleCollider>
 	</Colliders>
 
